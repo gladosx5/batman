@@ -20,8 +20,10 @@ const BatmanLogo = () => {
     const logo = logoRef.current;
     if (!logo) return;
 
-    // Configuration adaptée mobile/desktop
-    const maxScroll = 2000; // Même scroll pour mobile et desktop
+    // Configuration avec phase de descente dans la ville
+    const logoMaxScroll = 2000; // Phase logo
+    const cityDescentScroll = 3000; // Phase descente dans la ville
+    const totalMaxScroll = logoMaxScroll + cityDescentScroll;
     const startGrowingAt = isMobile ? 300 : 300; // Même timing
     const foregroundAt = isMobile ? 420 : 420; // Même timing
     const initialY = isMobile ? 300 : 200; // Plus bas sur mobile pour être caché
@@ -37,61 +39,144 @@ const BatmanLogo = () => {
       transformOrigin: "center center"
     });
 
+    // Références pour les éléments de la scène
+    const skyline = document.querySelector('.skyline') as HTMLElement;
+    const sky = document.querySelector('.sky') as HTMLElement;
+    const moon = document.querySelector('.moon') as HTMLElement;
+
     let scrollProgress = 0;
 
     // Animation fluide combinée
     const updateAnimation = () => {
-      const progress = Math.min(scrollProgress / maxScroll, 1);
+      const progress = Math.min(scrollProgress / totalMaxScroll, 1);
       
-      let yPosition, scale, logoZIndex, opacity;
+      if (scrollProgress <= logoMaxScroll) {
+        // Phase 1-3: Animation du logo (comme avant)
+        let yPosition, scale, logoZIndex, opacity;
       
-      if (scrollProgress < startGrowingAt) {
-        // Phase 1: Apparition progressive
-        const earlyProgress = scrollProgress / startGrowingAt;
-        yPosition = initialY - (earlyProgress * (isMobile ? 150 : 100));
-        scale = initialScale + (earlyProgress * (isMobile ? 0.4 : 0.2));
-        logoZIndex = 2; // Derrière la ville
-        opacity = isMobile ? earlyProgress * 0.8 : 0.8; // Apparition progressive sur mobile
-      } else if (scrollProgress < foregroundAt) {
-        // Phase 2: Croissance modérée
-        const midProgress = (scrollProgress - startGrowingAt) / (foregroundAt - startGrowingAt);
-        const baseY = initialY - (isMobile ? 150 : 100);
-        yPosition = baseY - (midProgress * (isMobile ? 100 : 100));
-        const baseScale = initialScale + (isMobile ? 0.4 : 0.2);
-        scale = baseScale + (midProgress * (isMobile ? 1.5 : 2.5));
-        logoZIndex = 2; // Toujours derrière
-        opacity = 0.8 + (midProgress * 0.1);
+        if (scrollProgress < startGrowingAt) {
+          // Phase 1: Apparition progressive
+          const earlyProgress = scrollProgress / startGrowingAt;
+          yPosition = initialY - (earlyProgress * (isMobile ? 150 : 100));
+          scale = initialScale + (earlyProgress * (isMobile ? 0.4 : 0.2));
+          logoZIndex = 2;
+          opacity = isMobile ? earlyProgress * 0.8 : 0.8;
+        } else if (scrollProgress < foregroundAt) {
+          // Phase 2: Croissance modérée
+          const midProgress = (scrollProgress - startGrowingAt) / (foregroundAt - startGrowingAt);
+          const baseY = initialY - (isMobile ? 150 : 100);
+          yPosition = baseY - (midProgress * (isMobile ? 100 : 100));
+          const baseScale = initialScale + (isMobile ? 0.4 : 0.2);
+          scale = baseScale + (midProgress * (isMobile ? 1.5 : 2.5));
+          logoZIndex = 2;
+          opacity = 0.8 + (midProgress * 0.1);
+        } else {
+          // Phase 3: Premier plan spectaculaire
+          const lateProgress = (scrollProgress - foregroundAt) / (logoMaxScroll - foregroundAt);
+          const baseY = initialY - (isMobile ? 250 : 200);
+          yPosition = baseY - (lateProgress * (isMobile ? 80 : 100));
+          const baseScale = initialScale + (isMobile ? 1.9 : 2.7);
+          scale = baseScale + (lateProgress * (isMobile ? 8.0 : 5.0));
+          logoZIndex = 1000;
+          opacity = 0.9 + (lateProgress * 0.1);
+        }
+      
+        // Appliquer les transformations du logo
+        logo.style.zIndex = logoZIndex.toString();
+        
+        gsap.to(logo, {
+          y: yPosition,
+          scale: scale,
+          opacity: opacity,
+          duration: 0.3,
+          ease: "power2.out"
+        });
+        
+        // Remettre la scène en position normale
+        if (skyline) {
+          gsap.to(skyline, {
+            y: 0,
+            duration: 0.3,
+            ease: "power2.out"
+          });
+        }
+        
       } else {
-        // Phase 3: Premier plan spectaculaire
-        const lateProgress = (scrollProgress - foregroundAt) / (maxScroll - foregroundAt);
-        const baseY = initialY - (isMobile ? 250 : 200);
-        yPosition = baseY - (lateProgress * (isMobile ? 80 : 100));
-        const baseScale = initialScale + (isMobile ? 1.9 : 2.7);
-        scale = baseScale + (lateProgress * (isMobile ? 8.0 : 5.0)); // Beaucoup plus grand sur mobile
-        logoZIndex = 1000; // Au premier plan, bien au-dessus de tout
-        opacity = 0.9 + (lateProgress * 0.1);
+        // Phase 4: Descente dans la ville
+        const descentProgress = (scrollProgress - logoMaxScroll) / cityDescentScroll;
+        const moveDistance = descentProgress * (isMobile ? 800 : 600);
+        
+        // Faire monter la ville et le logo ensemble
+        if (skyline) {
+          gsap.to(skyline, {
+            y: -moveDistance,
+            duration: 0.3,
+            ease: "power2.out"
+          });
+        }
+        
+        // Le logo suit le mouvement de la ville
+        const finalY = initialY - (isMobile ? 330 : 300);
+        gsap.to(logo, {
+          y: finalY - moveDistance,
+          duration: 0.3,
+          ease: "power2.out"
+        });
       }
-      
-      // Appliquer le z-index directement au style
-      logo.style.zIndex = logoZIndex.toString();
-      
-      gsap.to(logo, {
-        y: yPosition,
-        scale: scale,
-        opacity: opacity,
-        duration: 0.3,
-        ease: "power2.out"
-      });
     };
 
+    // Créer le fond de descente dans la ville
+    const createCityBackground = () => {
+      let cityBg = document.querySelector('.city-descent-bg') as HTMLElement;
+      if (!cityBg) {
+        cityBg = document.createElement('div');
+        cityBg.className = 'city-descent-bg';
+        cityBg.style.cssText = `
+          position: fixed;
+          top: 100vh;
+          left: 0;
+          width: 100vw;
+          height: 200vh;
+          background: linear-gradient(to bottom, #0f0323 0%, #09080c 50%, #000 100%);
+          z-index: 1;
+        `;
+        document.body.appendChild(cityBg);
+      }
+    };
+
+    createCityBackground();
+
+    // Fonction pour gérer le scroll de la page
+    const updatePageScroll = () => {
+      if (scrollProgress > logoMaxScroll) {
+        const descentProgress = (scrollProgress - logoMaxScroll) / cityDescentScroll;
+        const pageScrollY = descentProgress * window.innerHeight;
+        
+        // Simuler le scroll de page en déplaçant le fond
+        const cityBg = document.querySelector('.city-descent-bg') as HTMLElement;
+        if (cityBg) {
+          gsap.to(cityBg, {
+            y: -pageScrollY,
+            duration: 0.3,
+            ease: "power2.out"
+          });
+        }
+      }
+    };
+
+    const updateAllAnimations = () => {
+      updateAnimation();
+      updatePageScroll();
+    };
+      
     // Gestion du scroll de la molette
     const handleWheel = (e: WheelEvent) => {
       e.preventDefault();
       
       scrollProgress += e.deltaY * 2;
-      scrollProgress = Math.max(0, Math.min(scrollProgress, maxScroll));
+      scrollProgress = Math.max(0, Math.min(scrollProgress, totalMaxScroll));
       
-      updateAnimation();
+      updateAllAnimations();
     };
 
     // Gestion du scroll tactile
@@ -111,9 +196,9 @@ const BatmanLogo = () => {
       const deltaY = (touchStartY - touchY) * touchSensitivity;
       
       scrollProgress += deltaY;
-      scrollProgress = Math.max(0, Math.min(scrollProgress, maxScroll));
+      scrollProgress = Math.max(0, Math.min(scrollProgress, totalMaxScroll));
       
-      updateAnimation();
+      updateAllAnimations();
       touchStartY = touchY;
     };
 
@@ -137,8 +222,8 @@ const BatmanLogo = () => {
           scrollProgress -= 100;
           break;
       }
-      scrollProgress = Math.max(0, Math.min(scrollProgress, maxScroll));
-      updateAnimation();
+      scrollProgress = Math.max(0, Math.min(scrollProgress, totalMaxScroll));
+      updateAllAnimations();
     };
 
     // Ajout des event listeners
