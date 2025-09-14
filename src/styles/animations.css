@@ -425,29 +425,35 @@
   top: 50%;
   transform: translate(-50%, -50%);
   z-index: 10;
-  perspective: 1000px;
+  perspective: 2000px;
+  transform-style: preserve-3d;
+  width: 200px;
+  height: 200px;
 }
 
 .batman-logo {
-  width: 120px;
+  width: 200px;
   height: auto;
   display: block;
-  filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.5));
+  filter: drop-shadow(0 0 30px rgba(255, 215, 0, 0.8));
   will-change: transform, opacity, filter;
   transform-style: preserve-3d;
+  backface-visibility: hidden;
 }
 
 .batman-logo-glow {
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 120px;
-  height: 120px;
+  width: 200px;
+  height: 200px;
   transform: translate(-50%, -50%);
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(255, 215, 0, 0.3) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(255, 215, 0, 0.4) 0%, rgba(255, 140, 0, 0.2) 40%, transparent 70%);
+  box-shadow: 0 0 100px rgba(255, 215, 0, 0.3), 0 0 200px rgba(255, 140, 0, 0.1);
   will-change: transform, opacity, box-shadow;
   pointer-events: none;
+  backface-visibility: hidden;
 }
 
 /* Atmospheric Effects */
@@ -528,9 +534,8 @@
 
 /* Smooth scrolling */
 html {
-  scroll-behavior: smooth;
-  height: 100vh;
   overflow: hidden;
+  height: 100vh;
 }
 
 /* Prevent horizontal overflow */
@@ -539,4 +544,5 @@ body {
   height: 100vh;
   margin: 0;
   padding: 0;
+  background: #000;
 }
