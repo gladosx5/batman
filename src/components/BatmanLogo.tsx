@@ -20,9 +20,10 @@ const BatmanLogo = () => {
     const logo = logoRef.current;
     if (!logo) return;
 
-    // Configuration avec phase de descente dans la ville
-    const logoMaxScroll = 2000; // Phase logo
-    const cityDescentScroll = 3000; // Phase descente dans la ville
+    // Configuration avec phase de descente dans la ville et site vitrine
+    const logoMaxScroll = 1500; // Phase logo réduite
+    const cityDescentScroll = 2000; // Phase descente dans la ville
+    const siteContentScroll = 8000; // Phase contenu du site
     const totalMaxScroll = logoMaxScroll + cityDescentScroll;
     const startGrowingAt = isMobile ? 300 : 300; // Même timing
     const foregroundAt = isMobile ? 420 : 420; // Même timing
@@ -35,7 +36,7 @@ const BatmanLogo = () => {
       scale: initialScale,
       y: initialY,
       opacity: initialOpacity,
-      zIndex: 2,
+      zIndex: 1000, // Toujours au premier plan
       transformOrigin: "center center"
     });
 
@@ -43,12 +44,13 @@ const BatmanLogo = () => {
     const skyline = document.querySelector('.skyline') as HTMLElement;
     const sky = document.querySelector('.sky') as HTMLElement;
     const moon = document.querySelector('.moon') as HTMLElement;
+    const siteContent = document.querySelector('.site-content') as HTMLElement;
 
     let scrollProgress = 0;
 
     // Animation fluide combinée
     const updateAnimation = () => {
-      const progress = Math.min(scrollProgress / totalMaxScroll, 1);
+      const progress = Math.min(scrollProgress / (totalMaxScroll + siteContentScroll), 1);
       
       if (scrollProgress <= logoMaxScroll) {
         // Phase 1-3: Animation du logo (comme avant)
@@ -100,8 +102,18 @@ const BatmanLogo = () => {
             ease: "power2.out"
           });
         }
+
+        // Cacher le contenu du site
+        if (siteContent) {
+          gsap.to(siteContent, {
+            y: '100vh',
+            opacity: 0,
+            duration: 0.3,
+            ease: "power2.out"
+          });
+        }
         
-      } else {
+      } else if (scrollProgress <= totalMaxScroll) {
         // Phase 4: Descente dans la ville
         const descentProgress = (scrollProgress - logoMaxScroll) / cityDescentScroll;
         const moveDistance = descentProgress * (isMobile ? 800 : 600);
@@ -119,9 +131,53 @@ const BatmanLogo = () => {
         const finalY = initialY - (isMobile ? 330 : 300);
         gsap.to(logo, {
           y: finalY - moveDistance,
+          scale: initialScale + (isMobile ? 9.0 : 7.7), // Maintenir la taille finale
+          opacity: 1,
           duration: 0.3,
           ease: "power2.out"
         });
+
+        // Commencer à révéler le contenu du site
+        if (siteContent) {
+          const contentProgress = Math.max(0, descentProgress - 0.7); // Commencer à 70% de la descente
+          gsap.to(siteContent, {
+            y: `${100 - (contentProgress * 100 / 0.3)}vh`, // De 100vh à 0vh
+            opacity: contentProgress / 0.3,
+            duration: 0.3,
+            ease: "power2.out"
+          });
+        }
+      } else {
+        // Phase 5: Navigation dans le site vitrine
+        const siteProgress = (scrollProgress - totalMaxScroll) / siteContentScroll;
+        
+        // Le logo et la ville restent fixes en haut
+        if (skyline) {
+          gsap.to(skyline, {
+            y: -(isMobile ? 800 : 600),
+            duration: 0.3,
+            ease: "power2.out"
+          });
+        }
+        
+        const finalY = initialY - (isMobile ? 330 : 300);
+        gsap.to(logo, {
+          y: finalY - (isMobile ? 800 : 600),
+          scale: initialScale + (isMobile ? 9.0 : 7.7),
+          opacity: 1,
+          duration: 0.3,
+          ease: "power2.out"
+        });
+
+        // Le contenu du site défile normalement
+        if (siteContent) {
+          gsap.to(siteContent, {
+            y: -siteProgress * (siteContent.scrollHeight - window.innerHeight),
+            opacity: 1,
+            duration: 0.3,
+            ease: "power2.out"
+          });
+        }
       }
     };
 
@@ -148,7 +204,7 @@ const BatmanLogo = () => {
 
     // Fonction pour gérer le scroll de la page
     const updatePageScroll = () => {
-      if (scrollProgress > logoMaxScroll) {
+      if (scrollProgress > logoMaxScroll && scrollProgress <= totalMaxScroll) {
         const descentProgress = (scrollProgress - logoMaxScroll) / cityDescentScroll;
         // Synchroniser parfaitement avec le mouvement de la ville
         const moveDistance = descentProgress * (isMobile ? 800 : 600);
@@ -158,6 +214,16 @@ const BatmanLogo = () => {
         if (cityBg) {
           gsap.to(cityBg, {
             y: -moveDistance,
+            duration: 0.3,
+            ease: "power2.out"
+          });
+        }
+      } else if (scrollProgress > totalMaxScroll) {
+        // Maintenir le fond en position finale
+        const cityBg = document.querySelector('.city-descent-bg') as HTMLElement;
+        if (cityBg) {
+          gsap.to(cityBg, {
+            y: -(isMobile ? 800 : 600),
             duration: 0.3,
             ease: "power2.out"
           });
@@ -175,7 +241,7 @@ const BatmanLogo = () => {
       e.preventDefault();
       
       scrollProgress += e.deltaY * 2;
-      scrollProgress = Math.max(0, Math.min(scrollProgress, totalMaxScroll));
+      scrollProgress = Math.max(0, Math.min(scrollProgress, totalMaxScroll + siteContentScroll));
       
       updateAllAnimations();
     };
@@ -197,7 +263,7 @@ const BatmanLogo = () => {
       const deltaY = (touchStartY - touchY) * touchSensitivity;
       
       scrollProgress += deltaY;
-      scrollProgress = Math.max(0, Math.min(scrollProgress, totalMaxScroll));
+      scrollProgress = Math.max(0, Math.min(scrollProgress, totalMaxScroll + siteContentScroll));
       
       updateAllAnimations();
       touchStartY = touchY;
@@ -223,7 +289,7 @@ const BatmanLogo = () => {
           scrollProgress -= 100;
           break;
       }
-      scrollProgress = Math.max(0, Math.min(scrollProgress, totalMaxScroll));
+      scrollProgress = Math.max(0, Math.min(scrollProgress, totalMaxScroll + siteContentScroll));
       updateAllAnimations();
     };
 
