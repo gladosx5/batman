@@ -133,10 +133,10 @@ const BatmanLogo = () => {
         cityBg.className = 'city-descent-bg';
         cityBg.style.cssText = `
           position: fixed;
-          top: 100vh;
+          top: 0;
           left: 0;
           width: 100vw;
-          height: 200vh;
+          height: 300vh;
           background: linear-gradient(to bottom, #0f0323 0%, #09080c 50%, #000 100%);
           z-index: 1;
         `;
@@ -150,13 +150,13 @@ const BatmanLogo = () => {
     const updatePageScroll = () => {
       if (scrollProgress > logoMaxScroll) {
         const descentProgress = (scrollProgress - logoMaxScroll) / cityDescentScroll;
-        const pageScrollY = descentProgress * window.innerHeight;
+        const moveDistance = descentProgress * (isMobile ? 800 : 600);
         
-        // Simuler le scroll de page en déplaçant le fond
+        // Synchroniser le fond avec la ville
         const cityBg = document.querySelector('.city-descent-bg') as HTMLElement;
         if (cityBg) {
           gsap.to(cityBg, {
-            y: -pageScrollY,
+            y: -moveDistance,
             duration: 0.3,
             ease: "power2.out"
           });
