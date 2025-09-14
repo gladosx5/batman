@@ -1,52 +1,75 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { gsap } from 'gsap';
 
 const BatmanLogo = () => {
   const logoRef = useRef<HTMLImageElement>(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   useEffect(() => {
     const logo = logoRef.current;
     if (!logo) return;
 
-    // État initial - logo petit et caché derrière les toits
+    // Configuration adaptée mobile/desktop
+    const maxScroll = isMobile ? 800 : 2000; // Beaucoup moins de scroll sur mobile
+    const startGrowingAt = isMobile ? 100 : 300; // Commence plus tôt sur mobile
+    const foregroundAt = isMobile ? 200 : 420; // Premier plan plus tôt sur mobile
+    const initialY = isMobile ? 300 : 200; // Plus bas sur mobile pour être caché
+    const initialScale = isMobile ? 0.1 : 0.3; // Plus petit initialement sur mobile
+    const initialOpacity = isMobile ? 0 : 0.8; // Complètement invisible sur mobile
+
+    // État initial - logo caché
     gsap.set(logo, {
-      scale: 0.3,
-      y: 200, // Derrière les toits
-      opacity: 0.8,
+      scale: initialScale,
+      y: initialY,
+      opacity: initialOpacity,
       zIndex: 2,
       transformOrigin: "center center"
     });
 
     let scrollProgress = 0;
-    const maxScroll = 2000;
-    const startGrowingAt = 300; // Commence à grossir après 300 unités de scroll (environ 5 scrolls)
-    const foregroundAt = 420; // Passe au premier plan après 420 unités (environ 6-7 scrolls)
 
     // Animation fluide combinée
     const updateAnimation = () => {
       const progress = Math.min(scrollProgress / maxScroll, 1);
       
-      // Phase 1: Montée légère (premiers scrolls)
-      let yPosition, scale, logoZIndex;
+      let yPosition, scale, logoZIndex, opacity;
       
       if (scrollProgress < startGrowingAt) {
-        // Juste monter un peu sans grossir
+        // Phase 1: Apparition progressive
         const earlyProgress = scrollProgress / startGrowingAt;
-        yPosition = 200 - (earlyProgress * 100); // Monte un peu
-        scale = 0.3; // Reste petit
+        yPosition = initialY - (earlyProgress * (isMobile ? 150 : 100));
+        scale = initialScale + (earlyProgress * (isMobile ? 0.4 : 0.2));
         logoZIndex = 2; // Derrière la ville
+        opacity = isMobile ? earlyProgress * 0.8 : 0.8; // Apparition progressive sur mobile
       } else if (scrollProgress < foregroundAt) {
-        // Phase 2: Montée + grossissement (toujours derrière)
+        // Phase 2: Croissance modérée
         const midProgress = (scrollProgress - startGrowingAt) / (foregroundAt - startGrowingAt);
-        yPosition = 100 - (midProgress * 100); // Continue à monter
-        scale = 0.3 + (midProgress * 2.7); // Grossit modérément (0.3 à 3.0)
+        const baseY = initialY - (isMobile ? 150 : 100);
+        yPosition = baseY - (midProgress * (isMobile ? 100 : 100));
+        const baseScale = initialScale + (isMobile ? 0.4 : 0.2);
+        scale = baseScale + (midProgress * (isMobile ? 1.5 : 2.5));
         logoZIndex = 2; // Toujours derrière
+        opacity = 0.8 + (midProgress * 0.1);
       } else {
-        // Phase 3: Premier plan + grossissement spectaculaire
+        // Phase 3: Premier plan spectaculaire
         const lateProgress = (scrollProgress - foregroundAt) / (maxScroll - foregroundAt);
-        yPosition = 0 - (lateProgress * 100); // Monte encore plus
-        scale = 3.0 + (lateProgress * 5.0); // Grossit énormément (3.0 à 8.0)
+        const baseY = initialY - (isMobile ? 250 : 200);
+        yPosition = baseY - (lateProgress * (isMobile ? 80 : 100));
+        const baseScale = initialScale + (isMobile ? 1.9 : 2.7);
+        scale = baseScale + (lateProgress * (isMobile ? 3.0 : 5.0));
         logoZIndex = 1000; // Au premier plan, bien au-dessus de tout
+        opacity = 0.9 + (lateProgress * 0.1);
       }
       
       // Appliquer le z-index directement au style
@@ -55,7 +78,7 @@ const BatmanLogo = () => {
       gsap.to(logo, {
         y: yPosition,
         scale: scale,
-        opacity: 0.8 + (progress * 0.2),
+        opacity: opacity,
         duration: 0.3,
         ease: "power2.out"
       });
@@ -74,6 +97,7 @@ const BatmanLogo = () => {
     // Gestion du scroll tactile
     let touchStartY = 0;
     let isScrolling = false;
+    const touchSensitivity = isMobile ? 6 : 4; // Plus sensible sur mobile
     
     const handleTouchStart = (e: TouchEvent) => {
       touchStartY = e.touches[0].clientY;
@@ -84,7 +108,7 @@ const BatmanLogo = () => {
       e.preventDefault();
       isScrolling = true;
       const touchY = e.touches[0].clientY;
-      const deltaY = (touchStartY - touchY) * 4; // Augmenté pour mobile
+      const deltaY = (touchStartY - touchY) * touchSensitivity;
       
       scrollProgress += deltaY;
       scrollProgress = Math.max(0, Math.min(scrollProgress, maxScroll));
@@ -106,11 +130,11 @@ const BatmanLogo = () => {
         case 'ArrowDown':
         case ' ':
           e.preventDefault();
-          scrollProgress += 100;
+          scrollProgress += isMobile ? 50 : 100;
           break;
         case 'ArrowUp':
           e.preventDefault();
-          scrollProgress -= 100;
+          scrollProgress -= isMobile ? 50 : 100;
           break;
       }
       scrollProgress = Math.max(0, Math.min(scrollProgress, maxScroll));
@@ -132,7 +156,7 @@ const BatmanLogo = () => {
       window.removeEventListener('touchend', handleTouchEnd);
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, []);
+  }, [isMobile]);
 
   return (
     <div className="batman-logo-container">
