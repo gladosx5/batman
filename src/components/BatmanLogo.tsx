@@ -119,11 +119,11 @@ const BatmanLogo = () => {
         // Faire monter le site vitrine avec la ville
         const siteVitrine = document.querySelector('.site-vitrine') as HTMLElement;
         if (siteVitrine) {
+          const initialSiteTop = window.innerHeight * 0.65; // 65vh en pixels
           gsap.to(siteVitrine, {
-            y: -moveDistance,
+            y: -moveDistance, 
             duration: 0.3,
             ease: "power2.out",
-            zIndex: 10
           });
         }
         

@@ -533,8 +533,8 @@ body {
 
 /* Site Vitrine */
 .site-vitrine {
-  position: fixed;
-  top: 100vh;
+  position: absolute;
+  top: 65vh;
   left: 0;
   width: 100vw;
   min-height: 300vh;
