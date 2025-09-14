@@ -49,7 +49,7 @@ const BatmanLogo = () => {
         scale = 3.0 + (lateProgress * 5.0); // Grossit énormément (3.0 à 8.0)
         // AU PREMIER PLAN - BIEN AU-DESSUS DE TOUT
         logo.style.zIndex = '9999';
-        logo.style.position = 'absolute';
+        logo.style.position = 'fixed';
       }
       
       gsap.to(logo, {
