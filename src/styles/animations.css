@@ -424,7 +424,8 @@
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  z-index: 2; /* Sera modifié dynamiquement par JavaScript */
+  z-index: 2;
+  pointer-events: none;
 }
 
 .batman-logo {
@@ -434,6 +435,8 @@
   will-change: transform, opacity, filter;
   transition: none;
   filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.3));
+  position: relative;
+  z-index: inherit;
 }
 
 
