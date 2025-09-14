@@ -21,9 +21,9 @@ const BatmanLogo = () => {
     if (!logo) return;
 
     // Configuration adaptée mobile/desktop
-    const maxScroll = isMobile ? 800 : 2000; // Beaucoup moins de scroll sur mobile
-    const startGrowingAt = isMobile ? 100 : 300; // Commence plus tôt sur mobile
-    const foregroundAt = isMobile ? 200 : 420; // Premier plan plus tôt sur mobile
+    const maxScroll = 2000; // Même scroll pour mobile et desktop
+    const startGrowingAt = isMobile ? 300 : 300; // Même timing
+    const foregroundAt = isMobile ? 420 : 420; // Même timing
     const initialY = isMobile ? 300 : 200; // Plus bas sur mobile pour être caché
     const initialScale = isMobile ? 0.1 : 0.3; // Plus petit initialement sur mobile
     const initialOpacity = isMobile ? 0 : 0.8; // Complètement invisible sur mobile
@@ -67,7 +67,7 @@ const BatmanLogo = () => {
         const baseY = initialY - (isMobile ? 250 : 200);
         yPosition = baseY - (lateProgress * (isMobile ? 80 : 100));
         const baseScale = initialScale + (isMobile ? 1.9 : 2.7);
-        scale = baseScale + (lateProgress * (isMobile ? 3.0 : 5.0));
+        scale = baseScale + (lateProgress * (isMobile ? 8.0 : 5.0)); // Beaucoup plus grand sur mobile
         logoZIndex = 1000; // Au premier plan, bien au-dessus de tout
         opacity = 0.9 + (lateProgress * 0.1);
       }
@@ -130,11 +130,11 @@ const BatmanLogo = () => {
         case 'ArrowDown':
         case ' ':
           e.preventDefault();
-          scrollProgress += isMobile ? 50 : 100;
+          scrollProgress += 100;
           break;
         case 'ArrowUp':
           e.preventDefault();
-          scrollProgress -= isMobile ? 50 : 100;
+          scrollProgress -= 100;
           break;
       }
       scrollProgress = Math.max(0, Math.min(scrollProgress, maxScroll));

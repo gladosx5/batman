@@ -543,15 +543,6 @@ body {
   font-family: 'Arial', sans-serif;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
   animation: fade-in-out 4s ease-in-out infinite;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 15px;
-  background: rgba(0, 0, 0, 0.3);
-  padding: 15px 20px;
-  border-radius: 12px;
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 /* Animation souris scroll */
