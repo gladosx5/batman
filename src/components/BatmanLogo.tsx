@@ -44,13 +44,12 @@ const BatmanLogo = () => {
     const skyline = document.querySelector('.skyline') as HTMLElement;
     const sky = document.querySelector('.sky') as HTMLElement;
     const moon = document.querySelector('.moon') as HTMLElement;
-    const siteContent = document.querySelector('.site-content') as HTMLElement;
 
     let scrollProgress = 0;
 
     // Animation fluide combinée
     const updateAnimation = () => {
-      const progress = Math.min(scrollProgress / (totalMaxScroll + siteContentScroll), 1);
+      const progress = Math.min(scrollProgress / totalMaxScroll, 1);
       
       if (scrollProgress <= logoMaxScroll) {
         // Phase 1-3: Animation du logo (comme avant)
@@ -103,16 +102,6 @@ const BatmanLogo = () => {
           });
         }
 
-        // Cacher le contenu du site
-        if (siteContent) {
-          gsap.to(siteContent, {
-            y: '100vh',
-            opacity: 0,
-            duration: 0.3,
-            ease: "power2.out"
-          });
-        }
-        
       } else if (scrollProgress <= totalMaxScroll) {
         // Phase 4: Descente dans la ville
         const descentProgress = (scrollProgress - logoMaxScroll) / cityDescentScroll;
@@ -137,47 +126,7 @@ const BatmanLogo = () => {
           ease: "power2.out"
         });
 
-        // Commencer à révéler le contenu du site
-        if (siteContent) {
-          const contentProgress = Math.max(0, descentProgress - 0.1); // Commencer très tôt à 10% de la descente
-          gsap.to(siteContent, {
-            y: `${65 - (contentProgress * 65 / 0.9)}vh`, // De 65vh à 0vh (collé à la ville)
-            opacity: contentProgress / 0.9,
-            duration: 0.3,
-            ease: "power2.out"
-          });
-        }
-      } else {
-        // Phase 5: Navigation dans le site vitrine
-        const siteProgress = (scrollProgress - totalMaxScroll) / siteContentScroll;
-        
-        // Le logo et la ville restent fixes en haut, mais plus haut pour laisser place au header
-        if (skyline) {
-          gsap.to(skyline, {
-            y: -(isMobile ? 250 : 200), // Beaucoup moins haut
-            duration: 0.3,
-            ease: "power2.out"
-          });
-        }
-        
-        const finalY = initialY - (isMobile ? 330 : 300);
-        gsap.to(logo, {
-          y: finalY - (isMobile ? 250 : 200), // Beaucoup moins haut
-          scale: initialScale + (isMobile ? 9.0 : 7.7),
-          opacity: 1,
-          duration: 0.3,
-          ease: "power2.out"
-        });
 
-        // Le contenu du site défile normalement
-        if (siteContent) {
-          gsap.to(siteContent, {
-            y: -siteProgress * Math.max(0, siteContent.scrollHeight - window.innerHeight),
-            opacity: 1,
-            duration: 0.3,
-            ease: "power2.out"
-          });
-        }
       }
     };
 
@@ -252,7 +201,7 @@ const BatmanLogo = () => {
       e.preventDefault();
       
       scrollProgress += e.deltaY * 2;
-      scrollProgress = Math.max(0, Math.min(scrollProgress, totalMaxScroll + siteContentScroll));
+      scrollProgress = Math.max(0, Math.min(scrollProgress, totalMaxScroll));
       
       updateAllAnimations();
     };
@@ -274,7 +223,7 @@ const BatmanLogo = () => {
       const deltaY = (touchStartY - touchY) * touchSensitivity;
       
       scrollProgress += deltaY;
-      scrollProgress = Math.max(0, Math.min(scrollProgress, totalMaxScroll + siteContentScroll));
+      scrollProgress = Math.max(0, Math.min(scrollProgress, totalMaxScroll));
       
       updateAllAnimations();
       touchStartY = touchY;
@@ -300,7 +249,7 @@ const BatmanLogo = () => {
           scrollProgress -= 100;
           break;
       }
-      scrollProgress = Math.max(0, Math.min(scrollProgress, totalMaxScroll + siteContentScroll));
+      scrollProgress = Math.max(0, Math.min(scrollProgress, totalMaxScroll));
       updateAllAnimations();
     };
 
