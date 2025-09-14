@@ -8,44 +8,29 @@ const BatmanLogo = () => {
     const logo = logoRef.current;
     if (!logo) return;
 
-    // État initial - logo caché derrière les toits
+    // État initial - logo très petit et caché derrière les toits
     gsap.set(logo, {
-      scale: 0.3,
-      y: 200, // Positionné derrière les toits
-      opacity: 0.8,
+      scale: 0.1,
+      y: 300, // Bien derrière les toits
+      opacity: 0.6,
       transformOrigin: "center center"
     });
 
     let scrollProgress = 0;
-    const maxScroll = 2000; // Augmenté pour avoir plus de phases
+    const maxScroll = 2000;
 
-    // Animation avec deux phases
+    // Animation fluide combinée
     const updateAnimation = () => {
       const progress = Math.min(scrollProgress / maxScroll, 1);
       
-      if (progress <= 0.5) {
-        // Phase 1: Le logo monte des toits (0% à 50% du scroll)
-        const phaseProgress = progress * 2; // 0 à 1
-        
-        gsap.to(logo, {
-          y: 200 - (phaseProgress * 300), // Monte de derrière les toits vers le centre
-          scale: 0.3 + (phaseProgress * 0.7), // Grandit légèrement (0.3 à 1.0)
-          opacity: 0.8 + (phaseProgress * 0.2),
-          duration: 0.3,
-          ease: "power2.out"
-        });
-      } else {
-        // Phase 2: Le logo grossit énormément (50% à 100% du scroll)
-        const phaseProgress = (progress - 0.5) * 2; // 0 à 1
-        
-        gsap.to(logo, {
-          y: -100, // Position finale au centre
-          scale: 1.0 + (phaseProgress * 4), // Grossit énormément (1.0 à 5.0)
-          opacity: 1,
-          duration: 0.3,
-          ease: "power2.out"
-        });
-      }
+      // Animation fluide : sort de la ville ET grandit en même temps
+      gsap.to(logo, {
+        y: 300 - (progress * 400), // Monte de derrière les toits vers le centre et au-dessus
+        scale: 0.1 + (progress * 7.9), // Grandit énormément de 0.1 à 8.0
+        opacity: 0.6 + (progress * 0.4), // Devient plus visible
+        duration: 0.3,
+        ease: "power2.out"
+      });
     };
 
     // Gestion du scroll de la molette
