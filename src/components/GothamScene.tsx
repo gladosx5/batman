@@ -15,13 +15,9 @@ const GothamScene = () => {
       {/* Batman Logo */}
       <BatmanLogo />
 
-      {/* Atmospheric Effects */}
-      <div className="fog"></div>
-      <div className="atmospheric-glow"></div>
-      
       {/* Instructions overlay */}
       <div className="instructions">
-        <p>Utilisez la molette de la souris ou les flèches pour faire émerger Batman</p>
+        <p>Utilisez la molette pour faire sortir Batman des toits</p>
       </div>
     </div>
   );

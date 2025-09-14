@@ -424,34 +424,17 @@
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  z-index: 10;
-  perspective: 2000px;
-  transform-style: preserve-3d;
+  z-index: 2; /* Derrière la ville au début */
 }
 
 .batman-logo {
-  width: 150px;
+  width: 100px;
   height: auto;
   display: block;
-  filter: drop-shadow(0 0 30px rgba(255, 215, 0, 0.8)) drop-shadow(0 0 60px rgba(255, 215, 0, 0.4));
   will-change: transform, opacity, filter;
-  transform-style: preserve-3d;
   transition: none;
 }
 
-.batman-logo-glow {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 200px;
-  height: 200px;
-  transform: translate(-50%, -50%);
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(255, 215, 0, 0.6) 0%, rgba(255, 140, 0, 0.3) 40%, transparent 80%);
-  will-change: transform, opacity, box-shadow;
-  pointer-events: none;
-  box-shadow: 0 0 100px rgba(255, 215, 0, 0.5), 0 0 200px rgba(255, 140, 0, 0.3);
-}
 
 /* Atmospheric Effects */
 .fog {
