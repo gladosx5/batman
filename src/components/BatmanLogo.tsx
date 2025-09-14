@@ -13,36 +13,47 @@ const BatmanLogo = () => {
       scale: 0.3,
       y: 200, // Derrière les toits
       opacity: 0.8,
+      zIndex: 2, // Derrière la ville au début
       transformOrigin: "center center"
     });
 
     let scrollProgress = 0;
     const maxScroll = 2000;
     const startGrowingAt = 300; // Commence à grossir après 300 unités de scroll (environ 5 scrolls)
+    const foregroundAt = 600; // Passe au premier plan après 600 unités (environ 6 scrolls)
 
     // Animation fluide combinée
     const updateAnimation = () => {
       const progress = Math.min(scrollProgress / maxScroll, 1);
       
       // Phase 1: Montée légère (premiers scrolls)
-      let yPosition, scale;
+      let yPosition, scale, zIndex;
       
       if (scrollProgress < startGrowingAt) {
         // Juste monter un peu sans grossir
         const earlyProgress = scrollProgress / startGrowingAt;
         yPosition = 200 - (earlyProgress * 100); // Monte un peu
         scale = 0.3; // Reste petit
+        zIndex = 2; // Derrière la ville
+      } else if (scrollProgress < foregroundAt) {
+        // Phase 2: Montée + grossissement (toujours derrière)
+        const midProgress = (scrollProgress - startGrowingAt) / (foregroundAt - startGrowingAt);
+        yPosition = 100 - (midProgress * 100); // Continue à monter
+        scale = 0.3 + (midProgress * 2.7); // Grossit modérément (0.3 à 3.0)
+        zIndex = 2; // Toujours derrière
       } else {
-        // Phase 2: Montée + grossissement
-        const lateProgress = (scrollProgress - startGrowingAt) / (maxScroll - startGrowingAt);
-        yPosition = 100 - (lateProgress * 200); // Continue à monter
-        scale = 0.3 + (lateProgress * 7.7); // Grossit énormément (0.3 à 8.0)
+        // Phase 3: Premier plan + grossissement spectaculaire
+        const lateProgress = (scrollProgress - foregroundAt) / (maxScroll - foregroundAt);
+        yPosition = 0 - (lateProgress * 100); // Monte encore plus
+        scale = 3.0 + (lateProgress * 5.0); // Grossit énormément (3.0 à 8.0)
+        zIndex = 10; // Au premier plan, au-dessus de tout
       }
       
       gsap.to(logo, {
         y: yPosition,
         scale: scale,
         opacity: 0.8 + (progress * 0.2),
+        zIndex: zIndex,
         duration: 0.3,
         ease: "power2.out"
       });
