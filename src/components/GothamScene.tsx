@@ -17,7 +17,7 @@ const GothamScene = () => {
 
       {/* Instructions overlay */}
       <div className="instructions">
-        <p>Scrollez pour voir Batman sortir de Gotham et venir vers vous</p>
+        <p>Scrollez pour voir Batman sortir de Gotham (monte d'abord, puis grossit)</p>
       </div>
     </div>
   );

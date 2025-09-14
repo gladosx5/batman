@@ -8,26 +8,41 @@ const BatmanLogo = () => {
     const logo = logoRef.current;
     if (!logo) return;
 
-    // État initial - logo très petit et caché derrière les toits
+    // État initial - logo petit et caché derrière les toits
     gsap.set(logo, {
-      scale: 0.1,
-      y: 300, // Bien derrière les toits
-      opacity: 0.6,
+      scale: 0.3,
+      y: 200, // Derrière les toits
+      opacity: 0.8,
       transformOrigin: "center center"
     });
 
     let scrollProgress = 0;
     const maxScroll = 2000;
+    const startGrowingAt = 300; // Commence à grossir après 300 unités de scroll (environ 5 scrolls)
 
     // Animation fluide combinée
     const updateAnimation = () => {
       const progress = Math.min(scrollProgress / maxScroll, 1);
       
-      // Animation fluide : sort de la ville ET grandit en même temps
+      // Phase 1: Montée légère (premiers scrolls)
+      let yPosition, scale;
+      
+      if (scrollProgress < startGrowingAt) {
+        // Juste monter un peu sans grossir
+        const earlyProgress = scrollProgress / startGrowingAt;
+        yPosition = 200 - (earlyProgress * 100); // Monte un peu
+        scale = 0.3; // Reste petit
+      } else {
+        // Phase 2: Montée + grossissement
+        const lateProgress = (scrollProgress - startGrowingAt) / (maxScroll - startGrowingAt);
+        yPosition = 100 - (lateProgress * 200); // Continue à monter
+        scale = 0.3 + (lateProgress * 7.7); // Grossit énormément (0.3 à 8.0)
+      }
+      
       gsap.to(logo, {
-        y: 300 - (progress * 400), // Monte de derrière les toits vers le centre et au-dessus
-        scale: 0.1 + (progress * 7.9), // Grandit énormément de 0.1 à 8.0
-        opacity: 0.6 + (progress * 0.4), // Devient plus visible
+        y: yPosition,
+        scale: scale,
+        opacity: 0.8 + (progress * 0.2),
         duration: 0.3,
         ease: "power2.out"
       });
