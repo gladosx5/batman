@@ -432,11 +432,11 @@
   width: 100px;
   height: auto;
   display: block;
-  will-change: transform, opacity, filter;
-  transition: none;
+  will-change: transform, opacity;
   filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.3));
   position: relative;
   z-index: inherit;
+  transition: none;
 }
 
 
@@ -531,17 +531,6 @@ body {
   position: relative;
 }
 
-/* Fond pour la descente dans la ville */
-.city-descent-bg {
-  position: fixed;
-  top: 95vh;
-  left: 0;
-  width: 100vw;
-  height: 120vh;
-  background: linear-gradient(to bottom, #0f0323 0%, #09080c 50%, #1a1a1a 100%);
-  z-index: 1;
-  pointer-events: none;
-}
 
 /* Instructions overlay */
 .instructions {
@@ -716,16 +705,18 @@ body {
 /* Site Content Styles */
 .site-content {
   position: fixed;
-  top: 100vh;
+  top: 0;
   left: 0;
   width: 100vw;
   min-height: 100vh;
   background: linear-gradient(to bottom, #0a0a0a 0%, #1a1a1a 20%, #0f0323 40%, #1C2A3A 100%);
-  z-index: 20;
+  z-index: 10;
   opacity: 0;
+  transform: translateY(100vh);
   overflow-y: auto;
   color: #E8E8E8;
   box-shadow: 0 -20px 40px rgba(0, 0, 0, 0.8);
+  transition: none;
 }
 
 /* Header Styles */
@@ -735,8 +726,10 @@ body {
   border-bottom: 2px solid rgba(255, 214, 0, 0.3);
   position: sticky;
   top: 0;
-  z-index: 100;
+  z-index: 1000;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  transition: none;
 }
 
 .nav-link {
