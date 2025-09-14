@@ -10,7 +10,7 @@ const GothamScene = () => {
       </div>
 
       {/* Gotham City Skyline */}
-      <div className="skyline" style={{zIndex: 5}}></div>
+      <div className="skyline"></div>
 
       {/* Batman Logo */}
       <BatmanLogo />

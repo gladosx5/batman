@@ -13,6 +13,7 @@ const BatmanLogo = () => {
       scale: 0.3,
       y: 200, // Derrière les toits
       opacity: 0.8,
+      zIndex: 2,
       transformOrigin: "center center"
     });
 
@@ -26,31 +27,30 @@ const BatmanLogo = () => {
       const progress = Math.min(scrollProgress / maxScroll, 1);
       
       // Phase 1: Montée légère (premiers scrolls)
-      let yPosition, scale;
+      let yPosition, scale, logoZIndex;
       
       if (scrollProgress < startGrowingAt) {
         // Juste monter un peu sans grossir
         const earlyProgress = scrollProgress / startGrowingAt;
         yPosition = 200 - (earlyProgress * 100); // Monte un peu
         scale = 0.3; // Reste petit
-        // Derrière la ville
-        logo.style.zIndex = '2';
+        logoZIndex = 2; // Derrière la ville
       } else if (scrollProgress < foregroundAt) {
         // Phase 2: Montée + grossissement (toujours derrière)
         const midProgress = (scrollProgress - startGrowingAt) / (foregroundAt - startGrowingAt);
         yPosition = 100 - (midProgress * 100); // Continue à monter
         scale = 0.3 + (midProgress * 2.7); // Grossit modérément (0.3 à 3.0)
-        // Toujours derrière
-        logo.style.zIndex = '2';
+        logoZIndex = 2; // Toujours derrière
       } else {
         // Phase 3: Premier plan + grossissement spectaculaire
         const lateProgress = (scrollProgress - foregroundAt) / (maxScroll - foregroundAt);
         yPosition = 0 - (lateProgress * 100); // Monte encore plus
         scale = 3.0 + (lateProgress * 5.0); // Grossit énormément (3.0 à 8.0)
-        // AU PREMIER PLAN - BIEN AU-DESSUS DE TOUT
-        logo.style.zIndex = '9999';
-        logo.style.position = 'absolute';
+        logoZIndex = 1000; // Au premier plan, bien au-dessus de tout
       }
+      
+      // Appliquer le z-index directement au style
+      logo.style.zIndex = logoZIndex.toString();
       
       gsap.to(logo, {
         y: yPosition,
