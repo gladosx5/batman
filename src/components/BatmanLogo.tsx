@@ -122,7 +122,8 @@ const BatmanLogo = () => {
           gsap.to(siteVitrine, {
             y: -moveDistance,
             duration: 0.3,
-            ease: "power2.out"
+            ease: "power2.out",
+            zIndex: 10
           });
         }
         

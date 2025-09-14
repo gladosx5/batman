@@ -539,9 +539,10 @@ body {
   width: 100vw;
   min-height: 300vh;
   background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
-  z-index: 6;
+  z-index: 10;
   color: white;
   font-family: 'Arial', sans-serif;
+  pointer-events: auto;
 }
 
 .container {
@@ -822,7 +823,7 @@ body {
   width: 100vw;
   height: 50vh; /* Réduit la hauteur */
   background: linear-gradient(to bottom, #0f0323 0%, #09080c 100%);
-  z-index: 1;
+  z-index: 2;
   pointer-events: none;
 }
 
