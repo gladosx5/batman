@@ -16,8 +16,8 @@ const BatmanLogo = () => {
 
     // Initial state
     gsap.set(logo, {
-      scale: 0.3,
-      y: 100,
+      scale: 0.5,
+      y: 0,
       opacity: 0,
       rotationY: -15,
       transformOrigin: "center center",
@@ -57,15 +57,15 @@ const BatmanLogo = () => {
       ease: "power2.out"
     })
     .to(logo, {
-      y: -200,
-      scale: 2.5,
+      y: -50,
+      scale: 1.8,
       rotationY: 0,
       filter: "brightness(1.2)",
       duration: 0.7,
       ease: "cubic-bezier(0.25, 0.46, 0.45, 0.94)"
     }, 0.1)
     .to(glow, {
-      scale: 3,
+      scale: 2,
       opacity: 1,
       duration: 0.8,
       ease: "power2.out"
