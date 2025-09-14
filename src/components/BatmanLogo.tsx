@@ -27,8 +27,8 @@ const BatmanLogo = () => {
     const startGrowingAt = isMobile ? 500 : 300; // Plus tard sur mobile
     const foregroundAt = isMobile ? 800 : 420; // Plus tard sur mobile
     const initialY = isMobile ? 300 : 200; // Plus bas sur mobile pour être caché
-    const initialScale = isMobile ? 0.03 : 0.3; // Encore plus petit sur mobile
-    const initialOpacity = isMobile ? 0 : 0.8; // Complètement invisible sur mobile
+    const initialScale = isMobile ? 0.1 : 0.3; // Visible mais petit sur mobile
+    const initialOpacity = isMobile ? 0.3 : 0.8; // Légèrement visible sur mobile
 
     // État initial - logo caché
     gsap.set(logo, {
@@ -58,16 +58,16 @@ const BatmanLogo = () => {
           // Phase 1: Apparition progressive
           const earlyProgress = scrollProgress / startGrowingAt;
           yPosition = initialY - (earlyProgress * (isMobile ? 150 : 100));
-          scale = initialScale + (earlyProgress * (isMobile ? 0.15 : 0.2));
+          scale = initialScale + (earlyProgress * (isMobile ? 0.2 : 0.2));
           logoZIndex = 2;
-          opacity = isMobile ? earlyProgress * 0.8 : 0.8;
+          opacity = isMobile ? 0.3 + (earlyProgress * 0.5) : 0.8;
         } else if (scrollProgress < foregroundAt) {
           // Phase 2: Croissance modérée
           const midProgress = (scrollProgress - startGrowingAt) / (foregroundAt - startGrowingAt);
           const baseY = initialY - (isMobile ? 150 : 100);
           yPosition = baseY - (midProgress * (isMobile ? 100 : 100));
-          const baseScale = initialScale + (isMobile ? 0.15 : 0.2);
-          scale = baseScale + (midProgress * (isMobile ? 0.4 : 2.5));
+          const baseScale = initialScale + (isMobile ? 0.2 : 0.2);
+          scale = baseScale + (midProgress * (isMobile ? 0.5 : 2.5));
           logoZIndex = 2;
           opacity = 0.8 + (midProgress * 0.1);
         } else {
@@ -75,8 +75,8 @@ const BatmanLogo = () => {
           const lateProgress = (scrollProgress - foregroundAt) / (logoMaxScroll - foregroundAt);
           const baseY = initialY - (isMobile ? 250 : 200);
           yPosition = baseY - (lateProgress * (isMobile ? 80 : 100));
-          const baseScale = initialScale + (isMobile ? 0.55 : 2.7);
-          scale = baseScale + (lateProgress * (isMobile ? 1.2 : 5.0));
+          const baseScale = initialScale + (isMobile ? 0.7 : 2.7);
+          scale = baseScale + (lateProgress * (isMobile ? 1.0 : 5.0));
           logoZIndex = 1000;
           opacity = 0.9 + (lateProgress * 0.1);
         }
