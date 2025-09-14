@@ -116,6 +116,16 @@ const BatmanLogo = () => {
           });
         }
         
+        // Faire monter le site vitrine avec la ville
+        const siteVitrine = document.querySelector('.site-vitrine') as HTMLElement;
+        if (siteVitrine) {
+          gsap.to(siteVitrine, {
+            y: -moveDistance,
+            duration: 0.3,
+            ease: "power2.out"
+          });
+        }
+        
         // Le logo suit le mouvement de la ville
         const finalY = initialY - (isMobile ? 330 : 300);
         gsap.to(logo, {
