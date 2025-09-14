@@ -189,12 +189,13 @@ const BatmanLogo = () => {
         cityBg.className = 'city-descent-bg';
         cityBg.style.cssText = `
           position: fixed;
-          top: 95vh;
+          top: 100vh;
           left: 0;
           width: 100vw;
-          height: 200vh;
-          background: linear-gradient(to bottom, #0f0323 0%, #0f0323 20%, #09080c 60%, #000 100%);
+          height: 100vh;
+          background: linear-gradient(to bottom, #0f0323 0%, #09080c 50%, #000 100%);
           z-index: 1;
+          pointer-events: none;
         `;
         document.body.appendChild(cityBg);
       }
@@ -206,24 +207,33 @@ const BatmanLogo = () => {
     const updatePageScroll = () => {
       if (scrollProgress > logoMaxScroll && scrollProgress <= totalMaxScroll) {
         const descentProgress = (scrollProgress - logoMaxScroll) / cityDescentScroll;
-        // Synchroniser parfaitement avec le mouvement de la ville
         const moveDistance = descentProgress * (isMobile ? 800 : 600);
         
-        // Le fond doit bouger exactement comme la ville
         const cityBg = document.querySelector('.city-descent-bg') as HTMLElement;
         if (cityBg) {
           gsap.to(cityBg, {
-            y: -moveDistance,
+            y: -moveDistance * 0.5, // Réduire le mouvement du fond
             duration: 0.3,
             ease: "power2.out"
           });
         }
       } else if (scrollProgress > totalMaxScroll) {
-        // Maintenir le fond en position finale
+        // Le fond disparaît progressivement quand le site apparaît
         const cityBg = document.querySelector('.city-descent-bg') as HTMLElement;
         if (cityBg) {
           gsap.to(cityBg, {
-            y: -(isMobile ? 800 : 600),
+            opacity: 0,
+            duration: 0.3,
+            ease: "power2.out"
+          });
+        }
+      } else {
+        // Remettre le fond visible au début
+        const cityBg = document.querySelector('.city-descent-bg') as HTMLElement;
+        if (cityBg) {
+          gsap.to(cityBg, {
+            opacity: 1,
+            y: 0,
             duration: 0.3,
             ease: "power2.out"
           });
