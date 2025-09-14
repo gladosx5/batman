@@ -3,7 +3,7 @@ import { ArrowDown } from 'lucide-react';
 
 const Hero = () => {
   return (
-    <section className="hero">
+    <section className="hero" style={{ marginTop: 0 }}>
       <div className="hero-background">
         <img 
           src="https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1080&fit=crop" 
@@ -15,13 +15,13 @@ const Hero = () => {
       
       <div className="hero-content">
         <h1 className="hero-title">
-          Savourez l'Excellence
-          <span className="hero-subtitle">Cuisine authentique & fraîche</span>
+          Bienvenue chez DeliciousFood
+          <span className="hero-subtitle">Émergé des ombres de Gotham</span>
         </h1>
         
         <p className="hero-description">
-          Découvrez nos plats préparés avec passion, des ingrédients frais et locaux 
-          pour une expérience culinaire inoubliable.
+          Après avoir traversé les mystères de la nuit, découvrez notre cuisine 
+          exceptionnelle qui illumine vos papilles comme un phare dans l'obscurité.
         </p>
         
         <div className="hero-actions">
