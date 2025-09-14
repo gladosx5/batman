@@ -538,70 +538,8 @@ body {
   left: 0;
   width: 100vw;
   height: 200vh;
-  background: linear-gradient(to bottom, #0f0323 0%, #0f0323 20%, #09080c 60%, #000 100%);
+  background: linear-gradient(to bottom, #0f0323 0%, #09080c 50%, #000 100%);
   z-index: 1;
-}
-
-/* Fenêtres éclairées pour l'effet de descente */
-.city-descent-bg::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-image: 
-    /* Fenêtres éclairées - étage supérieur */
-    radial-gradient(1px 2px at 5% 10%, #ffeb3b, transparent),
-    radial-gradient(1px 2px at 12% 12%, #ffeb3b, transparent),
-    radial-gradient(1px 2px at 25% 8%, #ffeb3b, transparent),
-    radial-gradient(1px 2px at 35% 15%, #ffeb3b, transparent),
-    radial-gradient(1px 2px at 45% 9%, #ffeb3b, transparent),
-    radial-gradient(1px 2px at 55% 13%, #ffeb3b, transparent),
-    radial-gradient(1px 2px at 68% 11%, #ffeb3b, transparent),
-    radial-gradient(1px 2px at 78% 14%, #ffeb3b, transparent),
-    radial-gradient(1px 2px at 88% 10%, #ffeb3b, transparent),
-    radial-gradient(1px 2px at 95% 12%, #ffeb3b, transparent),
-    
-    /* Fenêtres éclairées - étage moyen */
-    radial-gradient(1px 2px at 8% 25%, #ffeb3b, transparent),
-    radial-gradient(1px 2px at 18% 28%, #ffeb3b, transparent),
-    radial-gradient(1px 2px at 32% 22%, #ffeb3b, transparent),
-    radial-gradient(1px 2px at 42% 30%, #ffeb3b, transparent),
-    radial-gradient(1px 2px at 58% 26%, #ffeb3b, transparent),
-    radial-gradient(1px 2px at 72% 29%, #ffeb3b, transparent),
-    radial-gradient(1px 2px at 85% 24%, #ffeb3b, transparent),
-    radial-gradient(1px 2px at 92% 27%, #ffeb3b, transparent),
-    
-    /* Fenêtres éclairées - étage inférieur (plus nombreuses) */
-    radial-gradient(1px 2px at 3% 40%, #ffeb3b, transparent),
-    radial-gradient(1px 2px at 10% 42%, #ffeb3b, transparent),
-    radial-gradient(1px 2px at 17% 38%, #ffeb3b, transparent),
-    radial-gradient(1px 2px at 28% 45%, #ffeb3b, transparent),
-    radial-gradient(1px 2px at 38% 41%, #ffeb3b, transparent),
-    radial-gradient(1px 2px at 48% 44%, #ffeb3b, transparent),
-    radial-gradient(1px 2px at 58% 39%, #ffeb3b, transparent),
-    radial-gradient(1px 2px at 68% 43%, #ffeb3b, transparent),
-    radial-gradient(1px 2px at 78% 40%, #ffeb3b, transparent),
-    radial-gradient(1px 2px at 88% 42%, #ffeb3b, transparent),
-    radial-gradient(1px 2px at 95% 41%, #ffeb3b, transparent),
-    
-    /* Quelques fenêtres plus bas (effet de profondeur) */
-    radial-gradient(1px 1px at 15% 55%, #ffeb3b, transparent),
-    radial-gradient(1px 1px at 35% 58%, #ffeb3b, transparent),
-    radial-gradient(1px 1px at 55% 52%, #ffeb3b, transparent),
-    radial-gradient(1px 1px at 75% 56%, #ffeb3b, transparent),
-    radial-gradient(1px 1px at 85% 54%, #ffeb3b, transparent);
-  
-  background-size: 100% 100%;
-  opacity: 0.8;
-  animation: city-lights-flicker 3s ease-in-out infinite alternate;
-}
-
-@keyframes city-lights-flicker {
-  0% { opacity: 0.6; }
-  50% { opacity: 0.9; }
-  100% { opacity: 0.7; }
 }
 
 /* Instructions overlay */
@@ -698,35 +636,6 @@ body {
 
 /* Responsive Design amélioré */
 @media (max-width: 768px) {
-  /* Simplification de la skyline sur mobile */
-  .skyline {
-    height: 60vh;
-    /* Version simplifiée avec moins de buildings pour mobile */
-    background: var(--w5) 2% 54%, var(--w6) 8% 56%, var(--w7) 5% 65%,
-      var(--w8) 12% 84%, var(--w6) 20% 44%, var(--w5) 25% 44%,
-      var(--w7) 18% 55%, var(--w6) 22% 58%, var(--w8) 28% 54%,
-      var(--w8) 32% 65%, var(--w5) 35% 62%, var(--w6) 40% 65%,
-      var(--w6) 45% 54%, var(--w7) 48% 68%, var(--w8) 52% 55%,
-      var(--w8) 58% 61%, var(--w7) 62% 84%, var(--w5) 65% 73%,
-      var(--w6) 70% 71%, var(--w5) 75% 82%, var(--w8) 78% 50%,
-      var(--w6) 82% 50%, var(--w7) 85% 65%, var(--w8) 88% 68%,
-      var(--w6) 92% 50%, var(--w5) 95% 59%,
-      linear-gradient(75deg, #0f0323, #0f0323), #0f0323;
-    
-    background-size: 2vw 1vh, 2vw 1.5vh, 2vw 1vh, 2vw 1vh, 2vw 2vh, 2vw 2vh,
-      2vw 1.25vh, 1.5vw 0.75vh, 2vw 2vh, 1.5vw 1vh, 2vw 1vh, 2vw 2vh, 2vw 1vh,
-      2vw 2vh, 2vw 1vh, 2vw 1vh, 2vw 1vh, 1.5vw 1vh, 2vw 2vh, 2vw 1vh, 2vw 1.5vh,
-      2vw 2vh, 1.5vw 0.5vh, 2vw 1vh, 2vw 1vh, 1.5vw 1vh, 100% 100%;
-    
-    /* Clip-path simplifié pour mobile */
-    clip-path: polygon(
-      0% 100%, 0% 95%, 5% 50%, 10% 48%, 15% 53%, 20% 40%, 25% 38%, 30% 45%,
-      35% 60%, 40% 46%, 45% 49%, 50% 54%, 55% 56%, 60% 54%, 65% 58%,
-      70% 51%, 75% 65%, 80% 54%, 85% 65%, 90% 64%, 95% 64%, 100% 65%,
-      100% 100%
-    );
-  }
-  
   .instructions {
     bottom: 25px;
     font-size: 12px;
@@ -761,29 +670,13 @@ body {
     left: 10vmin;
     top: 8vmin;
   }
+  
+  .skyline {
+    height: 60vh; /* Augmenté pour mieux cacher le logo */
+  }
 }
 
 @media (max-width: 480px) {
-  /* Skyline encore plus simplifiée pour très petits écrans */
-  .skyline {
-    height: 55vh;
-    /* Version ultra-simplifiée */
-    background: var(--w5) 5% 54%, var(--w6) 15% 56%, var(--w7) 10% 65%,
-      var(--w8) 25% 84%, var(--w6) 35% 44%, var(--w5) 45% 44%,
-      var(--w7) 55% 55%, var(--w6) 65% 58%, var(--w8) 75% 54%,
-      var(--w8) 85% 65%, var(--w5) 95% 62%,
-      linear-gradient(75deg, #0f0323, #0f0323), #0f0323;
-    
-    background-size: 3vw 1vh, 3vw 1.5vh, 3vw 1vh, 3vw 1vh, 3vw 2vh,
-      3vw 2vh, 3vw 1.25vh, 3vw 0.75vh, 3vw 2vh, 3vw 1vh, 3vw 1vh, 100% 100%;
-    
-    /* Clip-path très simplifié */
-    clip-path: polygon(
-      0% 100%, 0% 95%, 10% 50%, 20% 40%, 30% 45%, 40% 46%, 50% 54%,
-      60% 54%, 70% 51%, 80% 54%, 90% 64%, 100% 65%, 100% 100%
-    );
-  }
-  
   .instructions {
     bottom: 20px;
     font-size: 11px;
@@ -800,6 +693,10 @@ body {
     height: 10vmin;
     left: 8vmin;
     top: 6vmin;
+  }
+  
+  .skyline {
+    height: 55vh; /* Augmenté pour mieux cacher le logo */
   }
 }
 
