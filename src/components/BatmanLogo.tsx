@@ -24,10 +24,10 @@ const BatmanLogo = () => {
     const logoMaxScroll = 2000; // Phase logo
     const cityDescentScroll = 3000; // Phase descente dans la ville
     const totalMaxScroll = logoMaxScroll + cityDescentScroll;
-    const startGrowingAt = isMobile ? 400 : 300; // Plus tard sur mobile
-    const foregroundAt = isMobile ? 600 : 420; // Plus tard sur mobile
+    const startGrowingAt = isMobile ? 500 : 300; // Plus tard sur mobile
+    const foregroundAt = isMobile ? 800 : 420; // Plus tard sur mobile
     const initialY = isMobile ? 300 : 200; // Plus bas sur mobile pour être caché
-    const initialScale = isMobile ? 0.05 : 0.3; // Encore plus petit sur mobile
+    const initialScale = isMobile ? 0.03 : 0.3; // Encore plus petit sur mobile
     const initialOpacity = isMobile ? 0 : 0.8; // Complètement invisible sur mobile
 
     // État initial - logo caché
@@ -58,7 +58,7 @@ const BatmanLogo = () => {
           // Phase 1: Apparition progressive
           const earlyProgress = scrollProgress / startGrowingAt;
           yPosition = initialY - (earlyProgress * (isMobile ? 150 : 100));
-          scale = initialScale + (earlyProgress * (isMobile ? 0.2 : 0.2));
+          scale = initialScale + (earlyProgress * (isMobile ? 0.15 : 0.2));
           logoZIndex = 2;
           opacity = isMobile ? earlyProgress * 0.8 : 0.8;
         } else if (scrollProgress < foregroundAt) {
@@ -66,8 +66,8 @@ const BatmanLogo = () => {
           const midProgress = (scrollProgress - startGrowingAt) / (foregroundAt - startGrowingAt);
           const baseY = initialY - (isMobile ? 150 : 100);
           yPosition = baseY - (midProgress * (isMobile ? 100 : 100));
-          const baseScale = initialScale + (isMobile ? 0.2 : 0.2);
-          scale = baseScale + (midProgress * (isMobile ? 0.8 : 2.5));
+          const baseScale = initialScale + (isMobile ? 0.15 : 0.2);
+          scale = baseScale + (midProgress * (isMobile ? 0.4 : 2.5));
           logoZIndex = 2;
           opacity = 0.8 + (midProgress * 0.1);
         } else {
@@ -75,8 +75,8 @@ const BatmanLogo = () => {
           const lateProgress = (scrollProgress - foregroundAt) / (logoMaxScroll - foregroundAt);
           const baseY = initialY - (isMobile ? 250 : 200);
           yPosition = baseY - (lateProgress * (isMobile ? 80 : 100));
-          const baseScale = initialScale + (isMobile ? 1.0 : 2.7);
-          scale = baseScale + (lateProgress * (isMobile ? 3.0 : 5.0));
+          const baseScale = initialScale + (isMobile ? 0.55 : 2.7);
+          scale = baseScale + (lateProgress * (isMobile ? 1.2 : 5.0));
           logoZIndex = 1000;
           opacity = 0.9 + (lateProgress * 0.1);
         }
@@ -104,7 +104,7 @@ const BatmanLogo = () => {
       } else {
         // Phase 4: Descente dans la ville
         const descentProgress = (scrollProgress - logoMaxScroll) / cityDescentScroll;
-        const moveDistance = descentProgress * (isMobile ? 1200 : 600);
+        const moveDistance = descentProgress * (isMobile ? 1800 : 600);
         
         // Faire monter la ville et le logo ensemble
         if (skyline) {
@@ -150,13 +150,13 @@ const BatmanLogo = () => {
     const updatePageScroll = () => {
       if (scrollProgress > logoMaxScroll) {
         const descentProgress = (scrollProgress - logoMaxScroll) / cityDescentScroll;
-        const pageScrollY = descentProgress * (isMobile ? window.innerHeight * 2 : window.innerHeight);
+        const pageScrollY = descentProgress * (isMobile ? window.innerHeight * 3 : window.innerHeight);
         
         // Simuler le scroll de page en déplaçant le fond
         const cityBg = document.querySelector('.city-descent-bg') as HTMLElement;
         if (cityBg) {
           gsap.to(cityBg, {
-            y: window.innerHeight - pageScrollY,
+            y: -pageScrollY,
             duration: 0.3,
             ease: "power2.out"
           });

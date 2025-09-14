@@ -534,10 +534,10 @@ body {
 /* Fond pour la descente dans la ville */
 .city-descent-bg {
   position: fixed;
-  top: 100vh;
+  top: 0;
   left: 0;
   width: 100vw;
-  height: 200vh;
+  height: 400vh;
   background: linear-gradient(to bottom, #0f0323 0%, #09080c 50%, #000 100%);
   z-index: 1;
 }
@@ -661,7 +661,7 @@ body {
   }
   
   .batman-logo {
-    width: 70px;
+    width: 60px;
   }
   
   .moon {
@@ -685,7 +685,7 @@ body {
   }
   
   .batman-logo {
-    width: 50px;
+    width: 40px;
   }
   
   .moon {
