@@ -21,8 +21,8 @@ const BatmanLogo = () => {
     if (!logo) return;
 
     // Configuration avec phase de descente dans la ville et site vitrine
-    const logoMaxScroll = 1500; // Phase logo réduite
-    const cityDescentScroll = 1000; // Phase descente réduite pour coller le site
+    const logoMaxScroll = 1500; // Phase logo
+    const cityDescentScroll = 500; // Phase descente très réduite
     const siteContentScroll = 8000; // Phase contenu du site
     const totalMaxScroll = logoMaxScroll + cityDescentScroll;
     const startGrowingAt = isMobile ? 300 : 300; // Même timing
@@ -116,7 +116,7 @@ const BatmanLogo = () => {
       } else if (scrollProgress <= totalMaxScroll) {
         // Phase 4: Descente dans la ville
         const descentProgress = (scrollProgress - logoMaxScroll) / cityDescentScroll;
-        const moveDistance = descentProgress * (isMobile ? 800 : 600);
+        const moveDistance = descentProgress * (isMobile ? 200 : 150); // Réduction drastique
         
         // Faire monter la ville et le logo ensemble
         if (skyline) {
@@ -139,10 +139,10 @@ const BatmanLogo = () => {
 
         // Commencer à révéler le contenu du site
         if (siteContent) {
-          const contentProgress = Math.max(0, descentProgress - 0.3); // Commencer plus tôt à 30% de la descente
+          const contentProgress = Math.max(0, descentProgress - 0.1); // Commencer très tôt à 10% de la descente
           gsap.to(siteContent, {
-            y: `${100 - (contentProgress * 100 / 0.7)}vh`, // De 100vh à 0vh plus progressivement
-            opacity: contentProgress / 0.7,
+            y: `${65 - (contentProgress * 65 / 0.9)}vh`, // De 65vh à 0vh (collé à la ville)
+            opacity: contentProgress / 0.9,
             duration: 0.3,
             ease: "power2.out"
           });
@@ -154,7 +154,7 @@ const BatmanLogo = () => {
         // Le logo et la ville restent fixes en haut, mais plus haut pour laisser place au header
         if (skyline) {
           gsap.to(skyline, {
-            y: -(isMobile ? 900 : 700), // Plus haut pour laisser place au header
+            y: -(isMobile ? 250 : 200), // Beaucoup moins haut
             duration: 0.3,
             ease: "power2.out"
           });
@@ -162,7 +162,7 @@ const BatmanLogo = () => {
         
         const finalY = initialY - (isMobile ? 330 : 300);
         gsap.to(logo, {
-          y: finalY - (isMobile ? 900 : 700), // Plus haut pour laisser place au header
+          y: finalY - (isMobile ? 250 : 200), // Beaucoup moins haut
           scale: initialScale + (isMobile ? 9.0 : 7.7),
           opacity: 1,
           duration: 0.3,
@@ -207,12 +207,12 @@ const BatmanLogo = () => {
     const updatePageScroll = () => {
       if (scrollProgress > logoMaxScroll && scrollProgress <= totalMaxScroll) {
         const descentProgress = (scrollProgress - logoMaxScroll) / cityDescentScroll;
-        const moveDistance = descentProgress * (isMobile ? 900 : 700);
+        const moveDistance = descentProgress * (isMobile ? 200 : 150);
         
         const cityBg = document.querySelector('.city-descent-bg') as HTMLElement;
         if (cityBg) {
           gsap.to(cityBg, {
-            y: -moveDistance * 0.5, // Réduire le mouvement du fond
+            y: -moveDistance * 0.3, // Réduire encore plus le mouvement du fond
             duration: 0.3,
             ease: "power2.out"
           });
@@ -222,7 +222,7 @@ const BatmanLogo = () => {
         const cityBg = document.querySelector('.city-descent-bg') as HTMLElement;
         if (cityBg) {
           gsap.to(cityBg, {
-            y: -(isMobile ? 900 : 700),
+            y: -(isMobile ? 250 : 200),
             opacity: 1,
             duration: 0.3,
             ease: "power2.out"

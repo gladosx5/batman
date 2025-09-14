@@ -534,11 +534,11 @@ body {
 /* Fond pour la descente dans la ville */
 .city-descent-bg {
   position: fixed;
-  top: 65vh; /* Aligné avec la skyline */
+  top: 100vh; /* Caché initialement */
   left: 0;
   width: 100vw;
-  height: 100vh;
-  background: linear-gradient(to bottom, #0f0323 0%, #09080c 50%, #1a1a1a 100%);
+  height: 50vh; /* Réduit la hauteur */
+  background: linear-gradient(to bottom, #0f0323 0%, #09080c 100%);
   z-index: 1;
   pointer-events: none;
 }

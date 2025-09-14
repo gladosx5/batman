@@ -20,48 +20,49 @@ const SiteContent = () => {
   const [headerVisible, setHeaderVisible] = useState(false);
 
   useEffect(() => {
-    // Observer pour détecter quand le site content devient visible
+    // Afficher le header immédiatement
+    setHeaderVisible(true);
     const siteContent = document.querySelector('.site-content');
     const header = document.querySelector('.site-header');
     
-    if (!siteContent || !header) return;
+    if (header) {
+      header.classList.add('visible');
+    }
 
-    const observer = new MutationObserver(() => {
-      const opacity = parseFloat(getComputedStyle(siteContent).opacity);
-      const shouldShowHeader = opacity > 0.3;
-      
-      if (shouldShowHeader !== headerVisible) {
-        setHeaderVisible(shouldShowHeader);
-        if (shouldShowHeader) {
-          header.classList.add('visible');
-        } else {
-          header.classList.remove('visible');
+    // Observer pour détecter quand le site content devient visible
+    if (siteContent && header) {
+      const observer = new MutationObserver(() => {
+        const opacity = parseFloat(getComputedStyle(siteContent).opacity);
+        const shouldShowHeader = opacity > 0.1; // Seuil très bas
+        
+        if (shouldShowHeader !== headerVisible) {
+          setHeaderVisible(shouldShowHeader);
+          if (shouldShowHeader) {
+            header.classList.add('visible');
+          } else {
+            header.classList.remove('visible');
+          }
         }
-      }
-    });
+      });
 
-    observer.observe(siteContent, {
-      attributes: true,
-      attributeFilter: ['style']
-    });
+      observer.observe(siteContent, {
+        attributes: true,
+        attributeFilter: ['style']
+      });
 
-    // Vérification initiale
-    const checkInitialState = () => {
-      const opacity = parseFloat(getComputedStyle(siteContent).opacity);
-      if (opacity > 0.3) {
-        setHeaderVisible(true);
-        header.classList.add('visible');
-      }
-    };
-
-    const interval = setInterval(checkInitialState, 100);
-    setTimeout(() => clearInterval(interval), 2000);
-
-    return () => {
-      observer.disconnect();
-      clearInterval(interval);
-    };
+      return () => {
+        observer.disconnect();
+      };
+    }
   }, [headerVisible]);
+
+  // Effet séparé pour l'affichage initial du header
+  useEffect(() => {
+    const header = document.querySelector('.site-header');
+    if (header) {
+      // Forcer l'affichage du header dès le chargement
+      setTimeout(() => {
+        header.classList.add('visible');
 
   const menuData: MenuCategory[] = [
     {
