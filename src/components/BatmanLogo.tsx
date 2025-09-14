@@ -150,13 +150,14 @@ const BatmanLogo = () => {
     const updatePageScroll = () => {
       if (scrollProgress > logoMaxScroll) {
         const descentProgress = (scrollProgress - logoMaxScroll) / cityDescentScroll;
-        const pageScrollY = descentProgress * window.innerHeight;
+        // Synchroniser parfaitement avec le mouvement de la ville
+        const moveDistance = descentProgress * (isMobile ? 800 : 600);
         
-        // Simuler le scroll de page en déplaçant le fond
+        // Le fond doit bouger exactement comme la ville
         const cityBg = document.querySelector('.city-descent-bg') as HTMLElement;
         if (cityBg) {
           gsap.to(cityBg, {
-            y: -pageScrollY,
+            y: -moveDistance,
             duration: 0.3,
             ease: "power2.out"
           });
