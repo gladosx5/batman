@@ -20,95 +20,230 @@ const BatmanLogo = () => {
     const logo = logoRef.current;
     if (!logo) return;
 
-    // Configuration simplifiée
-    const logoMaxScroll = 1500; // Animation du logo
-    const startGrowingAt = isMobile ? 300 : 300;
-    const foregroundAt = isMobile ? 420 : 420;
-    const initialY = isMobile ? 300 : 200;
-    const initialScale = isMobile ? 0.1 : 0.3;
-    const initialOpacity = isMobile ? 0 : 0.8;
+    // Configuration avec phase de descente dans la ville et site vitrine
+    const logoMaxScroll = 1500; // Phase logo réduite
+    const cityDescentScroll = 2000; // Phase descente dans la ville
+    const siteContentScroll = 8000; // Phase contenu du site
+    const totalMaxScroll = logoMaxScroll + cityDescentScroll;
+    const startGrowingAt = isMobile ? 300 : 300; // Même timing
+    const foregroundAt = isMobile ? 420 : 420; // Même timing
+    const initialY = isMobile ? 300 : 200; // Plus bas sur mobile pour être caché
+    const initialScale = isMobile ? 0.1 : 0.3; // Plus petit initialement sur mobile
+    const initialOpacity = isMobile ? 0 : 0.8; // Complètement invisible sur mobile
 
     // État initial - logo caché
     gsap.set(logo, {
       scale: initialScale,
       y: initialY,
       opacity: initialOpacity,
-      zIndex: 1000,
+      zIndex: 1000, // Toujours au premier plan
       transformOrigin: "center center"
     });
 
-    // Références pour les éléments
+    // Références pour les éléments de la scène
     const skyline = document.querySelector('.skyline') as HTMLElement;
+    const sky = document.querySelector('.sky') as HTMLElement;
+    const moon = document.querySelector('.moon') as HTMLElement;
     const siteContent = document.querySelector('.site-content') as HTMLElement;
-    const siteHeader = document.querySelector('.site-header') as HTMLElement;
 
     let scrollProgress = 0;
 
-    // Animation simplifiée du logo uniquement
-    const updateLogoAnimation = () => {
+    // Animation fluide combinée
+    const updateAnimation = () => {
+      const progress = Math.min(scrollProgress / (totalMaxScroll + siteContentScroll), 1);
+      
       if (scrollProgress <= logoMaxScroll) {
-        // Animation du logo
-        let yPosition, scale, opacity;
+        // Phase 1-3: Animation du logo (comme avant)
+        let yPosition, scale, logoZIndex, opacity;
       
         if (scrollProgress < startGrowingAt) {
+          // Phase 1: Apparition progressive
           const earlyProgress = scrollProgress / startGrowingAt;
           yPosition = initialY - (earlyProgress * (isMobile ? 150 : 100));
           scale = initialScale + (earlyProgress * (isMobile ? 0.4 : 0.2));
+          logoZIndex = 2;
           opacity = isMobile ? earlyProgress * 0.8 : 0.8;
         } else if (scrollProgress < foregroundAt) {
+          // Phase 2: Croissance modérée
           const midProgress = (scrollProgress - startGrowingAt) / (foregroundAt - startGrowingAt);
           const baseY = initialY - (isMobile ? 150 : 100);
           yPosition = baseY - (midProgress * (isMobile ? 100 : 100));
           const baseScale = initialScale + (isMobile ? 0.4 : 0.2);
           scale = baseScale + (midProgress * (isMobile ? 1.5 : 2.5));
+          logoZIndex = 2;
           opacity = 0.8 + (midProgress * 0.1);
         } else {
+          // Phase 3: Premier plan spectaculaire
           const lateProgress = (scrollProgress - foregroundAt) / (logoMaxScroll - foregroundAt);
           const baseY = initialY - (isMobile ? 250 : 200);
           yPosition = baseY - (lateProgress * (isMobile ? 80 : 100));
           const baseScale = initialScale + (isMobile ? 1.9 : 2.7);
           scale = baseScale + (lateProgress * (isMobile ? 8.0 : 5.0));
+          logoZIndex = 1000;
           opacity = 0.9 + (lateProgress * 0.1);
         }
       
-        // Appliquer les transformations du logo sans transition
-        logo.style.transform = `translate(-50%, -50%) translateY(${yPosition}px) scale(${scale})`;
-        logo.style.opacity = opacity.toString();
+        // Appliquer les transformations du logo
+        logo.style.zIndex = logoZIndex.toString();
         
-        // Cacher le site
-        if (siteContent) {
-          siteContent.style.transform = 'translateY(100vh)';
-          siteContent.style.opacity = '0';
-        }
-
-        // Afficher progressivement le header
-        if (siteHeader) {
-          const headerProgress = Math.max(0, (scrollProgress - foregroundAt) / (logoMaxScroll - foregroundAt));
-          siteHeader.style.opacity = headerProgress.toString();
-        }
+        gsap.to(logo, {
+          y: yPosition,
+          scale: scale,
+          opacity: opacity,
+          duration: 0.3,
+          ease: "power2.out"
+        });
         
-      } else {
-        // Animation terminée - afficher le site directement sous la ville
-        
-        // Cacher la ville
+        // Remettre la scène en position normale
         if (skyline) {
-          skyline.style.display = 'none';
+          gsap.to(skyline, {
+            y: 0,
+            duration: 0.3,
+            ease: "power2.out"
+          });
         }
 
-        // Afficher le site immédiatement
+        // Cacher le contenu du site
         if (siteContent) {
-          siteContent.style.transform = 'translateY(0)';
-          siteContent.style.opacity = '1';
+          gsap.to(siteContent, {
+            y: '100vh',
+            opacity: 0,
+            duration: 0.3,
+            ease: "power2.out"
+          });
         }
-
-        // Header complètement visible
-        if (siteHeader) {
-          siteHeader.style.opacity = '1';
+        
+      } else if (scrollProgress <= totalMaxScroll) {
+        // Phase 4: Descente dans la ville
+        const descentProgress = (scrollProgress - logoMaxScroll) / cityDescentScroll;
+        const moveDistance = descentProgress * (isMobile ? 800 : 600);
+        
+        // Faire monter la ville et le logo ensemble
+        if (skyline) {
+          gsap.to(skyline, {
+            y: -moveDistance,
+            duration: 0.3,
+            ease: "power2.out"
+          });
         }
+        
+        // Le logo suit le mouvement de la ville
+        const finalY = initialY - (isMobile ? 330 : 300);
+        gsap.to(logo, {
+          y: finalY - moveDistance,
+          scale: initialScale + (isMobile ? 9.0 : 7.7), // Maintenir la taille finale
+          opacity: 1,
+          duration: 0.3,
+          ease: "power2.out"
+        });
 
-        // Cacher le logo
-        logo.style.opacity = '0';
+        // Commencer à révéler le contenu du site
+        if (siteContent) {
+          const contentProgress = Math.max(0, descentProgress - 0.7); // Commencer à 70% de la descente
+          gsap.to(siteContent, {
+            y: `${100 - (contentProgress * 100 / 0.3)}vh`, // De 100vh à 0vh
+            opacity: contentProgress / 0.3,
+            duration: 0.3,
+            ease: "power2.out"
+          });
+        }
+      } else {
+        // Phase 5: Navigation dans le site vitrine
+        const siteProgress = (scrollProgress - totalMaxScroll) / siteContentScroll;
+        
+        // Le logo et la ville restent fixes en haut
+        if (skyline) {
+          gsap.to(skyline, {
+            y: -(isMobile ? 800 : 600),
+            duration: 0.3,
+            ease: "power2.out"
+          });
+        }
+        
+        const finalY = initialY - (isMobile ? 330 : 300);
+        gsap.to(logo, {
+          y: finalY - (isMobile ? 800 : 600),
+          scale: initialScale + (isMobile ? 9.0 : 7.7),
+          opacity: 1,
+          duration: 0.3,
+          ease: "power2.out"
+        });
+
+        // Le contenu du site défile normalement
+        if (siteContent) {
+          gsap.to(siteContent, {
+            y: -siteProgress * (siteContent.scrollHeight - window.innerHeight),
+            opacity: 1,
+            duration: 0.3,
+            ease: "power2.out"
+          });
+        }
       }
+    };
+
+    // Créer le fond de descente dans la ville
+    const createCityBackground = () => {
+      let cityBg = document.querySelector('.city-descent-bg') as HTMLElement;
+      if (!cityBg) {
+        cityBg = document.createElement('div');
+        cityBg.className = 'city-descent-bg';
+        cityBg.style.cssText = `
+          position: fixed;
+          top: 100vh;
+          left: 0;
+          width: 100vw;
+          height: 100vh;
+          background: linear-gradient(to bottom, #0f0323 0%, #09080c 50%, #000 100%);
+          z-index: 1;
+          pointer-events: none;
+        `;
+        document.body.appendChild(cityBg);
+      }
+    };
+
+    createCityBackground();
+
+    // Fonction pour gérer le scroll de la page
+    const updatePageScroll = () => {
+      if (scrollProgress > logoMaxScroll && scrollProgress <= totalMaxScroll) {
+        const descentProgress = (scrollProgress - logoMaxScroll) / cityDescentScroll;
+        const moveDistance = descentProgress * (isMobile ? 800 : 600);
+        
+        const cityBg = document.querySelector('.city-descent-bg') as HTMLElement;
+        if (cityBg) {
+          gsap.to(cityBg, {
+            y: -moveDistance * 0.5, // Réduire le mouvement du fond
+            duration: 0.3,
+            ease: "power2.out"
+          });
+        }
+      } else if (scrollProgress > totalMaxScroll) {
+        // Le fond disparaît progressivement quand le site apparaît
+        const cityBg = document.querySelector('.city-descent-bg') as HTMLElement;
+        if (cityBg) {
+          gsap.to(cityBg, {
+            opacity: 0,
+            duration: 0.3,
+            ease: "power2.out"
+          });
+        }
+      } else {
+        // Remettre le fond visible au début
+        const cityBg = document.querySelector('.city-descent-bg') as HTMLElement;
+        if (cityBg) {
+          gsap.to(cityBg, {
+            opacity: 1,
+            y: 0,
+            duration: 0.3,
+            ease: "power2.out"
+          });
+        }
+      }
+    };
+
+    const updateAllAnimations = () => {
+      updateAnimation();
+      updatePageScroll();
     };
       
     // Gestion du scroll de la molette
@@ -116,25 +251,15 @@ const BatmanLogo = () => {
       e.preventDefault();
       
       scrollProgress += e.deltaY * 2;
-      scrollProgress = Math.max(0, Math.min(scrollProgress, logoMaxScroll + 500));
+      scrollProgress = Math.max(0, Math.min(scrollProgress, totalMaxScroll + siteContentScroll));
       
-      updateLogoAnimation();
-
-      // Si on remonte tout en haut, remettre la ville
-      if (scrollProgress === 0) {
-        if (skyline) {
-          skyline.style.display = 'block';
-        }
-        if (siteHeader) {
-          siteHeader.style.opacity = '0';
-        }
-      }
+      updateAllAnimations();
     };
 
     // Gestion du scroll tactile
     let touchStartY = 0;
     let isScrolling = false;
-    const touchSensitivity = isMobile ? 6 : 4;
+    const touchSensitivity = isMobile ? 6 : 4; // Plus sensible sur mobile
     
     const handleTouchStart = (e: TouchEvent) => {
       touchStartY = e.touches[0].clientY;
@@ -148,25 +273,15 @@ const BatmanLogo = () => {
       const deltaY = (touchStartY - touchY) * touchSensitivity;
       
       scrollProgress += deltaY;
-      scrollProgress = Math.max(0, Math.min(scrollProgress, logoMaxScroll + 500));
+      scrollProgress = Math.max(0, Math.min(scrollProgress, totalMaxScroll + siteContentScroll));
       
-      updateLogoAnimation();
-
-      // Si on remonte tout en haut, remettre la ville
-      if (scrollProgress === 0) {
-        if (skyline) {
-          skyline.style.display = 'block';
-        }
-        if (siteHeader) {
-          siteHeader.style.opacity = '0';
-        }
-      }
-      
+      updateAllAnimations();
       touchStartY = touchY;
     };
 
     const handleTouchEnd = (e: TouchEvent) => {
       if (!isScrolling) {
+        // Si pas de scroll, on peut traiter comme un tap
         return;
       }
     };
@@ -184,18 +299,8 @@ const BatmanLogo = () => {
           scrollProgress -= 100;
           break;
       }
-      scrollProgress = Math.max(0, Math.min(scrollProgress, logoMaxScroll + 500));
-      updateLogoAnimation();
-
-      // Si on remonte tout en haut, remettre la ville
-      if (scrollProgress === 0) {
-        if (skyline) {
-          skyline.style.display = 'block';
-        }
-        if (siteHeader) {
-          siteHeader.style.opacity = '0';
-        }
-      }
+      scrollProgress = Math.max(0, Math.min(scrollProgress, totalMaxScroll + siteContentScroll));
+      updateAllAnimations();
     };
 
     // Ajout des event listeners
