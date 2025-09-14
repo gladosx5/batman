@@ -20,7 +20,7 @@ const BatmanLogo = () => {
     let scrollProgress = 0;
     const maxScroll = 2000;
     const startGrowingAt = 300; // Commence à grossir après 300 unités de scroll (environ 5 scrolls)
-    const foregroundAt = 600; // Passe au premier plan après 600 unités (environ 6 scrolls)
+    const foregroundAt = 420; // Passe au premier plan après 420 unités (environ 6-7 scrolls)
 
     // Animation fluide combinée
     const updateAnimation = () => {
@@ -46,7 +46,7 @@ const BatmanLogo = () => {
         const lateProgress = (scrollProgress - foregroundAt) / (maxScroll - foregroundAt);
         yPosition = 0 - (lateProgress * 100); // Monte encore plus
         scale = 3.0 + (lateProgress * 5.0); // Grossit énormément (3.0 à 8.0)
-        zIndex = 10; // Au premier plan, au-dessus de tout
+        zIndex = 100; // Au premier plan, bien au-dessus de tout
       }
       
       gsap.to(logo, {
