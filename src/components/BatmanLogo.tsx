@@ -73,20 +73,31 @@ const BatmanLogo = () => {
 
     // Gestion du scroll tactile
     let touchStartY = 0;
+    let isScrolling = false;
+    
     const handleTouchStart = (e: TouchEvent) => {
       touchStartY = e.touches[0].clientY;
+      isScrolling = false;
     };
 
     const handleTouchMove = (e: TouchEvent) => {
       e.preventDefault();
+      isScrolling = true;
       const touchY = e.touches[0].clientY;
-      const deltaY = (touchStartY - touchY) * 3;
+      const deltaY = (touchStartY - touchY) * 4; // Augmenté pour mobile
       
       scrollProgress += deltaY;
       scrollProgress = Math.max(0, Math.min(scrollProgress, maxScroll));
       
       updateAnimation();
       touchStartY = touchY;
+    };
+
+    const handleTouchEnd = (e: TouchEvent) => {
+      if (!isScrolling) {
+        // Si pas de scroll, on peut traiter comme un tap
+        return;
+      }
     };
 
     // Gestion des touches clavier
@@ -110,6 +121,7 @@ const BatmanLogo = () => {
     window.addEventListener('wheel', handleWheel, { passive: false });
     window.addEventListener('touchstart', handleTouchStart, { passive: false });
     window.addEventListener('touchmove', handleTouchMove, { passive: false });
+    window.addEventListener('touchend', handleTouchEnd, { passive: true });
     window.addEventListener('keydown', handleKeyDown);
 
     // Cleanup
@@ -117,6 +129,7 @@ const BatmanLogo = () => {
       window.removeEventListener('wheel', handleWheel);
       window.removeEventListener('touchstart', handleTouchStart);
       window.removeEventListener('touchmove', handleTouchMove);
+      window.removeEventListener('touchend', handleTouchEnd);
       window.removeEventListener('keydown', handleKeyDown);
     };
   }, []);

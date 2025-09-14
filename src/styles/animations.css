@@ -543,6 +543,71 @@ body {
   font-family: 'Arial', sans-serif;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
   animation: fade-in-out 3s ease-in-out infinite;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}
+
+/* Animation souris scroll */
+.scroll-mouse {
+  width: 24px;
+  height: 40px;
+  border: 2px solid rgba(255, 255, 255, 0.8);
+  border-radius: 12px;
+  position: relative;
+  background: rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(5px);
+}
+
+.scroll-mouse::before {
+  content: '';
+  position: absolute;
+  top: 6px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 2px;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 1px;
+  animation: scroll-wheel 2s ease-in-out infinite;
+}
+
+@keyframes scroll-wheel {
+  0% {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+  50% {
+    opacity: 0.5;
+    transform: translateX(-50%) translateY(12px);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(-50%) translateY(20px);
+  }
+}
+
+/* Animation flèche vers le bas pour mobile */
+.scroll-arrow {
+  display: none;
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-top: 12px solid rgba(255, 255, 255, 0.8);
+  animation: bounce-arrow 2s ease-in-out infinite;
+}
+
+@keyframes bounce-arrow {
+  0%, 100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  50% {
+    transform: translateY(10px);
+    opacity: 0.5;
+  }
 }
 
 @keyframes fade-in-out {
@@ -550,7 +615,87 @@ body {
   50% { opacity: 1; }
 }
 
+/* Instructions spécifiques mobile */
+.mobile-instructions {
+  display: none;
+}
+
 /* Focus pour les contrôles clavier */
 .gotham-scene:focus {
   outline: none;
+}
+
+/* Responsive Design amélioré */
+@media (max-width: 768px) {
+  .instructions {
+    bottom: 20px;
+    font-size: 12px;
+    padding: 0 20px;
+  }
+  
+  .scroll-mouse {
+    display: none;
+  }
+  
+  .scroll-arrow {
+    display: block;
+  }
+  
+  .desktop-instructions {
+    display: none;
+  }
+  
+  .mobile-instructions {
+    display: block;
+  }
+  
+  .batman-logo {
+    width: 70px;
+  }
+  
+  .moon {
+    width: 12vmin;
+    height: 12vmin;
+    left: 10vmin;
+    top: 8vmin;
+  }
+  
+  .skyline {
+    height: 55vh;
+  }
+}
+
+@media (max-width: 480px) {
+  .instructions {
+    bottom: 15px;
+    font-size: 11px;
+    padding: 0 15px;
+  }
+  
+  .batman-logo {
+    width: 50px;
+  }
+  
+  .moon {
+    width: 10vmin;
+    height: 10vmin;
+    left: 8vmin;
+    top: 6vmin;
+  }
+  
+  .skyline {
+    height: 50vh;
+  }
+}
+
+/* Optimisations tactiles */
+@media (hover: none) and (pointer: coarse) {
+  .gotham-scene {
+    touch-action: pan-y;
+  }
+  
+  .instructions {
+    user-select: none;
+    -webkit-user-select: none;
+  }
 }
