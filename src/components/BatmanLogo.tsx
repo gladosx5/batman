@@ -17,20 +17,35 @@ const BatmanLogo = () => {
     });
 
     let scrollProgress = 0;
-    const maxScroll = 1000;
+    const maxScroll = 2000; // Augmenté pour avoir plus de phases
 
-    // Animation simple de montée
+    // Animation avec deux phases
     const updateAnimation = () => {
       const progress = Math.min(scrollProgress / maxScroll, 1);
       
-      // Le logo monte simplement des toits
-      gsap.to(logo, {
-        y: 200 - (progress * 300), // Monte de derrière les toits vers le centre
-        scale: 0.3 + (progress * 1.2), // Grandit légèrement
-        opacity: 0.8 + (progress * 0.2),
-        duration: 0.3,
-        ease: "power2.out"
-      });
+      if (progress <= 0.5) {
+        // Phase 1: Le logo monte des toits (0% à 50% du scroll)
+        const phaseProgress = progress * 2; // 0 à 1
+        
+        gsap.to(logo, {
+          y: 200 - (phaseProgress * 300), // Monte de derrière les toits vers le centre
+          scale: 0.3 + (phaseProgress * 0.7), // Grandit légèrement (0.3 à 1.0)
+          opacity: 0.8 + (phaseProgress * 0.2),
+          duration: 0.3,
+          ease: "power2.out"
+        });
+      } else {
+        // Phase 2: Le logo grossit énormément (50% à 100% du scroll)
+        const phaseProgress = (progress - 0.5) * 2; // 0 à 1
+        
+        gsap.to(logo, {
+          y: -100, // Position finale au centre
+          scale: 1.0 + (phaseProgress * 4), // Grossit énormément (1.0 à 5.0)
+          opacity: 1,
+          duration: 0.3,
+          ease: "power2.out"
+        });
+      }
     };
 
     // Gestion du scroll de la molette
@@ -67,11 +82,11 @@ const BatmanLogo = () => {
         case 'ArrowDown':
         case ' ':
           e.preventDefault();
-          scrollProgress += 50;
+          scrollProgress += 100;
           break;
         case 'ArrowUp':
           e.preventDefault();
-          scrollProgress -= 50;
+          scrollProgress -= 100;
           break;
       }
       scrollProgress = Math.max(0, Math.min(scrollProgress, maxScroll));
