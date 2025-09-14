@@ -16,8 +16,8 @@ const BatmanLogo = () => {
 
     // Initial state
     gsap.set(logo, {
-      scale: 0.5,
-      y: 0,
+      scale: 0.3,
+      y: 100,
       opacity: 0,
       rotationY: -15,
       transformOrigin: "center center",
@@ -57,8 +57,8 @@ const BatmanLogo = () => {
       ease: "power2.out"
     })
     .to(logo, {
-      y: -50,
-      scale: 1.8,
+      y: -100,
+      scale: 1.5,
       rotationY: 0,
       filter: "brightness(1.2)",
       duration: 0.7,
