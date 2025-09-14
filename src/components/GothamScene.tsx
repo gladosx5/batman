@@ -22,10 +22,10 @@ const GothamScene = () => {
           <div className="scroll-mouse"></div>
           <div className="scroll-arrow"></div>
           <p className="desktop-instructions">
-            Scrollez pour découvrir Gotham Fresh Food
+            Scrollez pour plonger dans Gotham Fresh Food
           </p>
           <p className="mobile-instructions">
-            Glissez vers le haut pour découvrir Gotham Fresh Food
+            Glissez vers le haut pour plonger dans Gotham Fresh Food
           </p>
         </div>
       </div>

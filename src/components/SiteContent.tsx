@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { MapPin, Clock, Phone, Star, Zap, Truck, Shield } from 'lucide-react';
 
 interface MenuItem {
@@ -17,6 +17,51 @@ interface MenuCategory {
 
 const SiteContent = () => {
   const [selectedItem, setSelectedItem] = useState<MenuItem | null>(null);
+  const [headerVisible, setHeaderVisible] = useState(false);
+
+  useEffect(() => {
+    // Observer pour détecter quand le site content devient visible
+    const siteContent = document.querySelector('.site-content');
+    const header = document.querySelector('.site-header');
+    
+    if (!siteContent || !header) return;
+
+    const observer = new MutationObserver(() => {
+      const opacity = parseFloat(getComputedStyle(siteContent).opacity);
+      const shouldShowHeader = opacity > 0.3;
+      
+      if (shouldShowHeader !== headerVisible) {
+        setHeaderVisible(shouldShowHeader);
+        if (shouldShowHeader) {
+          header.classList.add('visible');
+        } else {
+          header.classList.remove('visible');
+        }
+      }
+    });
+
+    observer.observe(siteContent, {
+      attributes: true,
+      attributeFilter: ['style']
+    });
+
+    // Vérification initiale
+    const checkInitialState = () => {
+      const opacity = parseFloat(getComputedStyle(siteContent).opacity);
+      if (opacity > 0.3) {
+        setHeaderVisible(true);
+        header.classList.add('visible');
+      }
+    };
+
+    const interval = setInterval(checkInitialState, 100);
+    setTimeout(() => clearInterval(interval), 2000);
+
+    return () => {
+      observer.disconnect();
+      clearInterval(interval);
+    };
+  }, [headerVisible]);
 
   const menuData: MenuCategory[] = [
     {

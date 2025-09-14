@@ -534,10 +534,10 @@ body {
 /* Fond pour la descente dans la ville */
 .city-descent-bg {
   position: fixed;
-  top: 95vh;
+  top: 65vh; /* Aligné avec la skyline */
   left: 0;
   width: 100vw;
-  height: 120vh;
+  height: 100vh;
   background: linear-gradient(to bottom, #0f0323 0%, #09080c 50%, #1a1a1a 100%);
   z-index: 1;
   pointer-events: none;
@@ -716,27 +716,35 @@ body {
 /* Site Content Styles */
 .site-content {
   position: fixed;
-  top: 100vh;
+  top: 65vh; /* Positionné à la hauteur de la skyline */
   left: 0;
   width: 100vw;
   min-height: 100vh;
   background: linear-gradient(to bottom, #0a0a0a 0%, #1a1a1a 20%, #0f0323 40%, #1C2A3A 100%);
   z-index: 20;
   opacity: 0;
-  overflow-y: auto;
+  overflow-y: hidden; /* Désactiver le scroll natif */
   color: #E8E8E8;
   box-shadow: 0 -20px 40px rgba(0, 0, 0, 0.8);
 }
 
 /* Header Styles */
 .site-header {
-  background: rgba(10, 10, 10, 0.98);
+  background: rgba(10, 10, 10, 0.95);
   backdrop-filter: blur(10px);
   border-bottom: 2px solid rgba(255, 214, 0, 0.3);
-  position: sticky;
+  position: fixed;
   top: 0;
+  left: 0;
+  right: 0;
   z-index: 100;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  transform: translateY(-100px); /* Caché initialement */
+  transition: transform 0.3s ease;
+}
+
+.site-header.visible {
+  transform: translateY(0); /* Visible quand la classe est ajoutée */
 }
 
 .nav-link {
@@ -759,6 +767,7 @@ body {
 /* Hero Section */
 .hero-section {
   min-height: 80vh;
+  margin-top: 80px; /* Espace pour le header fixe */
   display: flex;
   align-items: center;
   justify-content: center;
