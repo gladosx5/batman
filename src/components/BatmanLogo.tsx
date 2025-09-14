@@ -137,7 +137,7 @@ const BatmanLogo = () => {
           left: 0;
           width: 100vw;
           height: 200vh;
-          background: linear-gradient(to bottom, #0f0323 0%, #09080c 50%, #000 100%);
+          background: linear-gradient(to bottom, #0f0323 0%, #0f0323 20%, #09080c 60%, #000 100%);
           z-index: 1;
         `;
         document.body.appendChild(cityBg);
