@@ -20,8 +20,8 @@ const BatmanLogo = () => {
     let scrollProgress = 0;
     const isMobile = window.innerWidth <= 768;
     const maxScroll = isMobile ? 400 : 800;
-    const websiteStartScroll = maxScroll + 200; // Le site commence après l'animation du logo
-    const totalScroll = websiteStartScroll + 1000; // Total pour faire disparaître le logo
+    const websiteStartScroll = maxScroll + 200;
+    const totalScroll = websiteStartScroll + 1000;
     
     // Animation fluide et progressive
     const updateAnimation = () => {
@@ -50,15 +50,15 @@ const BatmanLogo = () => {
           ease: "power2.out"
         });
         
-        // Scroll du site web
-        document.documentElement.scrollTop = 0;
+        // Pas de scroll du site pendant l'animation du logo
+        window.scrollTo(0, 0);
         
       } else if (scrollProgress <= websiteStartScroll) {
         // Phase 2: Logo reste en place, site commence à apparaître
         const websiteProgress = (scrollProgress - maxScroll) / 200;
-        const scrollAmount = websiteProgress * window.innerHeight * 0.3;
+        const scrollAmount = websiteProgress * (window.innerHeight * 0.5);
         
-        document.documentElement.scrollTop = scrollAmount;
+        window.scrollTo(0, scrollAmount);
         
         // Logo reste à sa position finale
         gsap.to(logo, {
@@ -74,9 +74,9 @@ const BatmanLogo = () => {
       } else {
         // Phase 3: Site continue de scroller, logo commence à disparaître
         const finalProgress = (scrollProgress - websiteStartScroll) / 1000;
-        const scrollAmount = window.innerHeight * 0.3 + (finalProgress * window.innerHeight * 2);
+        const scrollAmount = window.innerHeight * 0.5 + (finalProgress * window.innerHeight * 3);
         
-        document.documentElement.scrollTop = scrollAmount;
+        window.scrollTo(0, scrollAmount);
         
         // Logo disparaît progressivement
         const logoOpacity = Math.max(0, 1 - finalProgress * 2);

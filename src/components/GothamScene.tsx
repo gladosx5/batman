@@ -5,7 +5,8 @@ import FoodWebsite from './FoodWebsite';
 
 const GothamScene = () => {
   return (
-    <div className="gotham-container">
+    <>
+      {/* Scène Gotham fixe en arrière-plan */}
       <div className="gotham-scene" tabIndex={0}>
         {/* Sky with stars */}
         <div className="sky">
@@ -22,9 +23,11 @@ const GothamScene = () => {
         <ScrollIndicator />
       </div>
       
-      {/* Food Website Below */}
-      <FoodWebsite />
-    </div>
+      {/* Site web qui apparaît en dessous */}
+      <div className="website-container">
+        <FoodWebsite />
+      </div>
+    </>
   );
 };
 
