@@ -540,8 +540,6 @@ body {
   font-family: 'Arial', sans-serif;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
   animation: fade-in-out 3s ease-in-out infinite;
-  max-width: 300px;
-  line-height: 1.4;
 }
 
 @keyframes fade-in-out {

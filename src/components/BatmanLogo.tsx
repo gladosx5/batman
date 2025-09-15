@@ -39,13 +39,13 @@ const BatmanLogo = () => {
         // Phase 2: Montée + grossissement (toujours derrière)
         const midProgress = (scrollProgress - startGrowingAt) / (foregroundAt - startGrowingAt);
         yPosition = 100 - (midProgress * 100); // Continue à monter
-        scale = 0.3 + (midProgress * 1.2); // Grossit modérément (0.3 à 1.5)
+        scale = 0.3 + (midProgress * 2.7); // Grossit modérément (0.3 à 3.0)
         zIndex = 2; // Toujours derrière
       } else {
         // Phase 3: Premier plan + grossissement spectaculaire
         const lateProgress = (scrollProgress - foregroundAt) / (maxScroll - foregroundAt);
         yPosition = 0 - (lateProgress * 100); // Monte encore plus
-        scale = 1.5 + (lateProgress * 1.5); // Grossit raisonnablement (1.5 à 3.0)
+        scale = 3.0 + (lateProgress * 5.0); // Grossit énormément (3.0 à 8.0)
         zIndex = 100; // Au premier plan, bien au-dessus de tout
       }
       
