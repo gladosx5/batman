@@ -1,13 +1,12 @@
 /* Food Website Styles */
 .food-website {
-  position: fixed;
+  position: relative;
   top: 0;
   left: 0;
   width: 100%;
-  height: 100vh;
+  min-height: 100vh;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  z-index: -1; /* Derrière tous les autres éléments */
-  overflow-y: auto;
+  z-index: 1;
   padding-top: 0;
 }
 
@@ -19,6 +18,12 @@
   min-height: 100vh;
   padding: 0 5%;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+/* Ajouter plus de contenu pour permettre le scroll */
+.menu-section,
+.features-section {
+  min-height: 50vh; /* Assurer une hauteur minimum pour le scroll */
 }
 
 .hero-content {

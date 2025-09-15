@@ -19,6 +19,7 @@ const BatmanLogo = () => {
 
     let scrollProgress = 0;
     let sceneProgress = 0; // Nouveau: progression pour faire monter la scène
+    let isAnimationComplete = false; // Nouveau: flag pour savoir si l'animation est terminée
     const isMobile = window.innerWidth <= 768;
     const maxLogoScroll = isMobile ? 400 : 800; // Animation du logo
     const maxSceneScroll = isMobile ? 800 : 1200; // Animation de la scène qui monte
@@ -69,14 +70,33 @@ const BatmanLogo = () => {
       // La scène monte progressivement
       const translateY = -sceneProgressNormalized * 100; // Monte de 0 à -100vh
       
+      // Marquer l'animation comme terminée quand la scène est complètement montée
+      isAnimationComplete = sceneProgressNormalized >= 1;
+      
       gsap.to(gothamScene, {
         y: `${translateY}vh`,
         duration: 0.4,
         ease: "power2.out"
       });
 
+      // Cacher complètement la scène Gotham quand elle est montée
+      if (isAnimationComplete) {
+        gsap.to(gothamScene, {
+          opacity: 0,
+          duration: 0.5,
+          ease: "power2.out"
+        });
+      } else {
+        gsap.to(gothamScene, {
+          opacity: 1,
+          duration: 0.5,
+          ease: "power2.out"
+        });
+      }
+
       // Animation de disparition du logo seulement si on remonte ET que la scène est revenue en place
       if (sceneProgressNormalized <= 0 && scrollProgress < -200) {
+        isAnimationComplete = false;
         const disappearProgress = Math.min(Math.abs(scrollProgress + 200) / 300, 1);
         gsap.to(logo, {
           opacity: 1 - disappearProgress,
@@ -89,7 +109,13 @@ const BatmanLogo = () => {
 
     // Gestion du scroll de la molette (plus sensible)
     const handleWheel = (e: WheelEvent) => {
-      e.preventDefault();
+      // Ne pas empêcher le scroll par défaut si l'animation est terminée
+      if (!isAnimationComplete) {
+        e.preventDefault();
+      } else {
+        // Laisser le scroll normal fonctionner
+        return;
+      }
       
       const deltaY = e.deltaY * 1.5;
       
@@ -125,7 +151,14 @@ const BatmanLogo = () => {
     };
 
     const handleTouchMove = (e: TouchEvent) => {
-      e.preventDefault();
+      // Ne pas empêcher le scroll par défaut si l'animation est terminée
+      if (!isAnimationComplete) {
+        e.preventDefault();
+      } else {
+        // Laisser le scroll normal fonctionner
+        return;
+      }
+      
       const touchY = e.touches[0].clientY;
       const deltaY = (touchStartY - touchY) * 2; // Réduit la sensibilité tactile
       
@@ -155,6 +188,11 @@ const BatmanLogo = () => {
 
     // Gestion des touches clavier
     const handleKeyDown = (e: KeyboardEvent) => {
+      // Ne pas intercepter les touches si l'animation est terminée
+      if (isAnimationComplete) {
+        return;
+      }
+      
       let deltaY = 0;
       switch(e.key) {
         case 'ArrowDown':
