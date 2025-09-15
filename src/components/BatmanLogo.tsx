@@ -26,8 +26,8 @@ const BatmanLogo = () => {
     const updateAnimation = () => {
       const progress = Math.min(scrollProgress / maxScroll, 1);
       
-      // Phase 1: Montée légère (premiers scrolls) 
-      let yPosition, scale, zIndex, opacity;
+      // Phase 1: Montée légère (premiers scrolls)
+      let yPosition, scale, zIndex;
       
       if (scrollProgress < startGrowingAt) {
         // Juste monter un peu sans grossir
@@ -35,36 +35,24 @@ const BatmanLogo = () => {
         yPosition = 200 - (earlyProgress * 100); // Monte un peu
         scale = 0.3; // Reste petit
         zIndex = 2; // Derrière la ville
-        opacity = 0.8;
       } else if (scrollProgress < foregroundAt) {
         // Phase 2: Montée + grossissement (toujours derrière)
         const midProgress = (scrollProgress - startGrowingAt) / (foregroundAt - startGrowingAt);
         yPosition = 100 - (midProgress * 100); // Continue à monter
         scale = 0.3 + (midProgress * 1.2); // Grossit modérément (0.3 à 1.5)
         zIndex = 2; // Toujours derrière
-        opacity = 0.8 + (midProgress * 0.2);
       } else {
         // Phase 3: Premier plan + grossissement spectaculaire
         const lateProgress = (scrollProgress - foregroundAt) / (maxScroll - foregroundAt);
         yPosition = 0 - (lateProgress * 100); // Monte encore plus
         scale = 1.5 + (lateProgress * 1.5); // Grossit raisonnablement (1.5 à 3.0)
         zIndex = 100; // Au premier plan, bien au-dessus de tout
-        opacity = 1.0;
-        
-        // Si on est dans la phase de montée de la ville (après 2200)
-        if (scrollProgress > 2200) {
-          const cityLiftProgress = (scrollProgress - 2200) / (4000 - 2200);
-          // Le logo monte avec la ville et devient plus petit (animation inverse)
-          yPosition = (0 - (lateProgress * 100)) - (cityLiftProgress * window.innerHeight * 1.2);
-          scale = 3.0 - (cityLiftProgress * 2.7); // Devient plus petit (3.0 vers 0.3)
-          opacity = 1.0 - (cityLiftProgress * 0.7); // Devient plus transparent
-        }
       }
       
       gsap.to(logo, {
         y: yPosition,
         scale: scale,
-        opacity: opacity,
+        opacity: 0.8 + (progress * 0.2),
         zIndex: zIndex,
         duration: 0.3,
         ease: "power2.out"
