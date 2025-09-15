@@ -715,7 +715,6 @@ body {
   z-index: 20000;
   backdrop-filter: blur(6px);
   padding: 2rem;
-  overflow-y: auto;
 }
 
 .modal {
@@ -730,7 +729,6 @@ body {
   flex-direction: column;
   position: relative;
   box-shadow: 0 0 50px rgba(255, 214, 0, 0.3);
-  margin: auto;
 }
 
 .modal-close {
