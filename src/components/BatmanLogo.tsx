@@ -18,7 +18,7 @@ const BatmanLogo = () => {
     });
 
     let scrollProgress = 0;
-    const maxScroll = 1600; // Réduit de 400 (environ 4 scrolls)
+    const maxScroll = 1200; // Réduit encore de 400 pour éviter le zoom excessif
     const startGrowingAt = 300; // Commence à grossir après 300 unités de scroll (environ 5 scrolls)
     const foregroundAt = 420; // Passe au premier plan après 420 unités (environ 6-7 scrolls)
 
