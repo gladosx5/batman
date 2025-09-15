@@ -42,7 +42,6 @@
 /* Quand l'animation est terminée, désactiver les interactions sur la scène */
 .gotham-scene.animation-complete {
   pointer-events: none;
-  z-index: -1; /* Passer derrière le site web */
 }
 
 /* Sky and Atmosphere */

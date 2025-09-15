@@ -82,14 +82,12 @@ const BatmanLogo = () => {
 
       // Cacher complètement la scène Gotham quand elle est montée
       if (isAnimationComplete) {
-        gothamScene.classList.add('animation-complete');
         gsap.to(gothamScene, {
           opacity: 0,
           duration: 0.5,
           ease: "power2.out"
         });
       } else {
-        gothamScene.classList.remove('animation-complete');
         gsap.to(gothamScene, {
           opacity: 1,
           duration: 0.5,
