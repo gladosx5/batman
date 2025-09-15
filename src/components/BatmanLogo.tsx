@@ -10,60 +10,55 @@ const BatmanLogo = () => {
 
     // État initial - logo petit et caché derrière les toits
     gsap.set(logo, {
-      scale: 0.3,
-      y: 200, // Derrière les toits
-      opacity: 0.8,
-      zIndex: 2, // Derrière la ville au début
+      scale: 0.2,
+      y: 250,
+      opacity: 0.6,
+      zIndex: 2,
       transformOrigin: "center center"
     });
 
     let scrollProgress = 0;
-    const maxScroll = 1200; // Réduit encore de 400 pour éviter le zoom excessif
-    const startGrowingAt = 300; // Commence à grossir après 300 unités de scroll (environ 5 scrolls)
-    const foregroundAt = 420; // Passe au premier plan après 420 unités (environ 6-7 scrolls)
-
-    // Animation fluide combinée
+    const maxScroll = 800; // Réduit pour une animation plus courte
+    
+    // Animation fluide et progressive
     const updateAnimation = () => {
       const progress = Math.min(scrollProgress / maxScroll, 1);
       
-      // Phase 1: Montée légère (premiers scrolls)
-      let yPosition, scale, zIndex;
+      // Courbe d'animation plus douce
+      const easeProgress = 1 - Math.pow(1 - progress, 3); // Ease out cubic
       
-      if (scrollProgress < startGrowingAt) {
-        // Juste monter un peu sans grossir
-        const earlyProgress = scrollProgress / startGrowingAt;
-        yPosition = 200 - (earlyProgress * 100); // Monte un peu
-        scale = 0.3; // Reste petit
-        zIndex = 2; // Derrière la ville
-      } else if (scrollProgress < foregroundAt) {
-        // Phase 2: Montée + grossissement (toujours derrière)
-        const midProgress = (scrollProgress - startGrowingAt) / (foregroundAt - startGrowingAt);
-        yPosition = 100 - (midProgress * 100); // Continue à monter
-        scale = 0.3 + (midProgress * 2.7); // Grossit modérément (0.3 à 3.0)
-        zIndex = 2; // Toujours derrière
-      } else {
-        // Phase 3: Premier plan + grossissement spectaculaire
-        const lateProgress = (scrollProgress - foregroundAt) / (maxScroll - foregroundAt);
-        yPosition = 0 - (lateProgress * 100); // Monte encore plus
-        scale = 3.0 + (lateProgress * 5.0); // Grossit énormément (3.0 à 8.0)
-        zIndex = 100; // Au premier plan, bien au-dessus de tout
-      }
+      // Position Y: monte progressivement
+      const yPosition = 250 - (easeProgress * 300); // De 250 à -50
+      
+      // Scale: grossit modérément
+      const scale = 0.2 + (easeProgress * 1.3); // De 0.2 à 1.5 (beaucoup moins qu'avant)
+      
+      // Opacité: devient plus visible
+      const opacity = 0.6 + (easeProgress * 0.4); // De 0.6 à 1.0
+      
+      // Z-index: passe au premier plan progressivement
+      const zIndex = progress > 0.4 ? 100 : 2;
+      
+      // Effet de glow qui s'intensifie
+      const glowIntensity = easeProgress * 30;
+      const filter = `drop-shadow(0 0 ${glowIntensity}px rgba(255, 255, 255, ${easeProgress * 0.8}))`;
       
       gsap.to(logo, {
         y: yPosition,
         scale: scale,
-        opacity: 0.8 + (progress * 0.2),
+        opacity: opacity,
         zIndex: zIndex,
-        duration: 0.3,
+        filter: filter,
+        duration: 0.4,
         ease: "power2.out"
       });
     };
 
-    // Gestion du scroll de la molette
+    // Gestion du scroll de la molette (plus sensible)
     const handleWheel = (e: WheelEvent) => {
       e.preventDefault();
       
-      scrollProgress += e.deltaY * 2;
+      scrollProgress += e.deltaY * 1.5; // Réduit la sensibilité
       scrollProgress = Math.max(0, Math.min(scrollProgress, maxScroll));
       
       updateAnimation();
@@ -78,7 +73,7 @@ const BatmanLogo = () => {
     const handleTouchMove = (e: TouchEvent) => {
       e.preventDefault();
       const touchY = e.touches[0].clientY;
-      const deltaY = (touchStartY - touchY) * 3;
+      const deltaY = (touchStartY - touchY) * 2; // Réduit la sensibilité tactile
       
       scrollProgress += deltaY;
       scrollProgress = Math.max(0, Math.min(scrollProgress, maxScroll));
@@ -93,11 +88,11 @@ const BatmanLogo = () => {
         case 'ArrowDown':
         case ' ':
           e.preventDefault();
-          scrollProgress += 100;
+          scrollProgress += 60; // Réduit l'incrémentation
           break;
         case 'ArrowUp':
           e.preventDefault();
-          scrollProgress -= 100;
+          scrollProgress -= 60;
           break;
       }
       scrollProgress = Math.max(0, Math.min(scrollProgress, maxScroll));
@@ -109,6 +104,14 @@ const BatmanLogo = () => {
     window.addEventListener('touchstart', handleTouchStart, { passive: false });
     window.addEventListener('touchmove', handleTouchMove, { passive: false });
     window.addEventListener('keydown', handleKeyDown);
+
+    // Animation d'entrée subtile
+    gsap.to(logo, {
+      opacity: 0.8,
+      duration: 1,
+      ease: "power2.out",
+      delay: 0.5
+    });
 
     // Cleanup
     return () => {
