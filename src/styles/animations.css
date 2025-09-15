@@ -557,7 +557,7 @@ body {
 /* Underground Page */
 .underground-page {
   position: absolute;
-  top: 100vh; /* Commence juste en dessous de l'écran */
+  top: 40vh; /* Rapproché de la ville - même dans la ville c'est pas grave */
   left: 0;
   width: 100%;
   min-height: 200vh; /* Très haute pour avoir du contenu */

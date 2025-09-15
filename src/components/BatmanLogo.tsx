@@ -21,10 +21,12 @@ const BatmanLogo = () => {
     const maxScroll = 2000;
     const startGrowingAt = 300; // Commence à grossir après 300 unités de scroll (environ 5 scrolls)
     const foregroundAt = 420; // Passe au premier plan après 420 unités (environ 6-7 scrolls)
+    const cityLiftStart = 1800; // Début de la montée de la ville
+    const cityLiftEnd = 4000; // Fin de la montée de la ville
 
     // Animation fluide combinée
     const updateAnimation = () => {
-      const progress = Math.min(scrollProgress / maxScroll, 1);
+      const progress = Math.min(scrollProgress / cityLiftEnd, 1);
       
       // Phase 1: Montée légère (premiers scrolls) 
       let yPosition, scale, zIndex, opacity;
@@ -43,22 +45,28 @@ const BatmanLogo = () => {
         scale = 0.3 + (midProgress * 1.2); // Grossit modérément (0.3 à 1.5)
         zIndex = 2; // Toujours derrière
         opacity = 0.8 + (midProgress * 0.2);
-      } else {
+      } else if (scrollProgress < cityLiftStart) {
         // Phase 3: Premier plan + grossissement spectaculaire
-        const lateProgress = (scrollProgress - foregroundAt) / (maxScroll - foregroundAt);
+        const lateProgress = (scrollProgress - foregroundAt) / (cityLiftStart - foregroundAt);
         yPosition = 0 - (lateProgress * 100); // Monte encore plus
         scale = 1.5 + (lateProgress * 1.5); // Grossit raisonnablement (1.5 à 3.0)
         zIndex = 100; // Au premier plan, bien au-dessus de tout
         opacity = 1.0;
+      } else {
+        // Phase 4: Le logo monte avec la ville et fait l'animation inverse
+        const cityLiftProgress = (scrollProgress - cityLiftStart) / (cityLiftEnd - cityLiftStart);
+        const finalLateProgress = (cityLiftStart - foregroundAt) / (cityLiftStart - foregroundAt);
         
-        // Si on est dans la phase de montée de la ville (après 2200)
-        if (scrollProgress > 2200) {
-          const cityLiftProgress = (scrollProgress - 2200) / (4000 - 2200);
-          // Le logo monte avec la ville et devient plus petit (animation inverse)
-          yPosition = (0 - (lateProgress * 100)) - (cityLiftProgress * window.innerHeight * 1.2);
-          scale = 3.0 - (cityLiftProgress * 2.7); // Devient plus petit (3.0 vers 0.3)
-          opacity = 1.0 - (cityLiftProgress * 0.7); // Devient plus transparent
-        }
+        // Position finale avant la montée + montée avec la ville
+        const finalYPosition = 0 - (finalLateProgress * 100);
+        yPosition = finalYPosition - (cityLiftProgress * window.innerHeight * 1.2);
+        
+        // Animation inverse : de 3.0 vers 0.3
+        scale = 3.0 - (cityLiftProgress * 2.7);
+        
+        // Reste au premier plan mais devient transparent
+        zIndex = 100;
+        opacity = 1.0 - (cityLiftProgress * 0.7);
       }
       
       gsap.to(logo, {
@@ -76,7 +84,7 @@ const BatmanLogo = () => {
       e.preventDefault();
       
       scrollProgress += e.deltaY * 2;
-      scrollProgress = Math.max(0, Math.min(scrollProgress, maxScroll));
+      scrollProgress = Math.max(0, Math.min(scrollProgress, cityLiftEnd));
       
       updateAnimation();
     };
@@ -93,7 +101,7 @@ const BatmanLogo = () => {
       const deltaY = (touchStartY - touchY) * 3;
       
       scrollProgress += deltaY;
-      scrollProgress = Math.max(0, Math.min(scrollProgress, maxScroll));
+      scrollProgress = Math.max(0, Math.min(scrollProgress, cityLiftEnd));
       
       updateAnimation();
       touchStartY = touchY;
@@ -112,7 +120,7 @@ const BatmanLogo = () => {
           scrollProgress -= 100;
           break;
       }
-      scrollProgress = Math.max(0, Math.min(scrollProgress, maxScroll));
+      scrollProgress = Math.max(0, Math.min(scrollProgress, cityLiftEnd));
       updateAnimation();
     };
 

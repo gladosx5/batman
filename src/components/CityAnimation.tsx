@@ -14,7 +14,7 @@ const CityAnimation = () => {
     let scrollProgress = 0;
     const maxScroll = 4000; // Plus de scroll pour l'animation complète
     const batmanPhaseEnd = 2000; // Fin de l'animation Batman
-    const cityLiftStart = 2200; // Début de la montée de la ville
+    const cityLiftStart = 1800; // Début de la montée de la ville (synchronisé avec le logo)
     const cityLiftEnd = 4000; // Fin de la montée de la ville
 
     // État initial
