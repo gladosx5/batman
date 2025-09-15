@@ -1,11 +1,7 @@
 import React, { useRef, useEffect } from 'react';
 import { gsap } from 'gsap';
 
-interface BatmanLogoProps {
-  onAnimationComplete: (isComplete: boolean) => void;
-}
-
-const BatmanLogo: React.FC<BatmanLogoProps> = ({ onAnimationComplete }) => {
+const BatmanLogo = () => {
   const logoRef = useRef<HTMLImageElement>(null);
 
   useEffect(() => {
@@ -15,59 +11,42 @@ const BatmanLogo: React.FC<BatmanLogoProps> = ({ onAnimationComplete }) => {
     // État initial - logo petit et caché derrière les toits
     gsap.set(logo, {
       scale: 0.3,
-      y: 200,
+      y: 200, // Derrière les toits
       opacity: 0.8,
-      zIndex: 2,
+      zIndex: 2, // Derrière la ville au début
       transformOrigin: "center center"
     });
 
     let scrollProgress = 0;
-    const maxScroll = 1000; // Réduit de 2000 à 1000 pour une animation plus courte
-    const startGrowingAt = 200; // Commence plus tôt
-    const foregroundAt = 350; // Passe au premier plan plus tôt
-    const animationCompleteAt = 800; // Animation terminée plus tôt
+    const maxScroll = 2000;
+    const startGrowingAt = 300; // Commence à grossir après 300 unités de scroll (environ 5 scrolls)
+    const foregroundAt = 420; // Passe au premier plan après 420 unités (environ 6-7 scrolls)
 
-    let animationComplete = false;
-
+    // Animation fluide combinée
     const updateAnimation = () => {
       const progress = Math.min(scrollProgress / maxScroll, 1);
       
+      // Phase 1: Montée légère (premiers scrolls)
       let yPosition, scale, zIndex;
       
       if (scrollProgress < startGrowingAt) {
-        // Phase 1: Montée légère
+        // Juste monter un peu sans grossir
         const earlyProgress = scrollProgress / startGrowingAt;
-        yPosition = 200 - (earlyProgress * 80);
-        scale = 0.3;
-        zIndex = 2;
+        yPosition = 200 - (earlyProgress * 100); // Monte un peu
+        scale = 0.3; // Reste petit
+        zIndex = 2; // Derrière la ville
       } else if (scrollProgress < foregroundAt) {
-        // Phase 2: Montée + grossissement modéré
+        // Phase 2: Montée + grossissement (toujours derrière)
         const midProgress = (scrollProgress - startGrowingAt) / (foregroundAt - startGrowingAt);
-        yPosition = 120 - (midProgress * 80);
-        scale = 0.3 + (midProgress * 1.7); // Grossit jusqu'à 2.0
-        zIndex = 2;
-      } else if (scrollProgress < animationCompleteAt) {
-        // Phase 3: Premier plan + grossissement final
-        const lateProgress = (scrollProgress - foregroundAt) / (animationCompleteAt - foregroundAt);
-        yPosition = 40 - (lateProgress * 40);
-        scale = 2.0 + (lateProgress * 1.5); // Grossit jusqu'à 3.5 (plus raisonnable)
-        zIndex = 100;
+        yPosition = 100 - (midProgress * 100); // Continue à monter
+        scale = 0.3 + (midProgress * 2.7); // Grossit modérément (0.3 à 3.0)
+        zIndex = 2; // Toujours derrière
       } else {
-        // Phase 4: Logo fixe au-dessus de la ville
-        yPosition = 0;
-        scale = 3.5;
-        zIndex = 100;
-        
-        if (!animationComplete) {
-          animationComplete = true;
-          onAnimationComplete(true);
-        }
-      }
-      
-      // Animation inverse si on remonte complètement en haut
-      if (scrollProgress === 0 && animationComplete) {
-        animationComplete = false;
-        onAnimationComplete(false);
+        // Phase 3: Premier plan + grossissement spectaculaire
+        const lateProgress = (scrollProgress - foregroundAt) / (maxScroll - foregroundAt);
+        yPosition = 0 - (lateProgress * 100); // Monte encore plus
+        scale = 3.0 + (lateProgress * 5.0); // Grossit énormément (3.0 à 8.0)
+        zIndex = 100; // Au premier plan, bien au-dessus de tout
       }
       
       gsap.to(logo, {
@@ -75,29 +54,22 @@ const BatmanLogo: React.FC<BatmanLogoProps> = ({ onAnimationComplete }) => {
         scale: scale,
         opacity: 0.8 + (progress * 0.2),
         zIndex: zIndex,
-        duration: 0.2,
+        duration: 0.3,
         ease: "power2.out"
       });
     };
 
-    // Gestion optimisée du scroll avec requestAnimationFrame
-    let ticking = false;
-    
-    const requestTick = () => {
-      if (!ticking) {
-        requestAnimationFrame(updateAnimation);
-        ticking = true;
-        setTimeout(() => { ticking = false; }, 16); // 60fps
-      }
-    };
-
+    // Gestion du scroll de la molette
     const handleWheel = (e: WheelEvent) => {
       e.preventDefault();
-      scrollProgress += e.deltaY * 1.5; // Réduit la sensibilité
+      
+      scrollProgress += e.deltaY * 2;
       scrollProgress = Math.max(0, Math.min(scrollProgress, maxScroll));
-      requestTick();
+      
+      updateAnimation();
     };
 
+    // Gestion du scroll tactile
     let touchStartY = 0;
     const handleTouchStart = (e: TouchEvent) => {
       touchStartY = e.touches[0].clientY;
@@ -106,44 +78,46 @@ const BatmanLogo: React.FC<BatmanLogoProps> = ({ onAnimationComplete }) => {
     const handleTouchMove = (e: TouchEvent) => {
       e.preventDefault();
       const touchY = e.touches[0].clientY;
-      const deltaY = (touchStartY - touchY) * 2;
+      const deltaY = (touchStartY - touchY) * 3;
       
       scrollProgress += deltaY;
       scrollProgress = Math.max(0, Math.min(scrollProgress, maxScroll));
       
-      requestTick();
+      updateAnimation();
       touchStartY = touchY;
     };
 
+    // Gestion des touches clavier
     const handleKeyDown = (e: KeyboardEvent) => {
       switch(e.key) {
         case 'ArrowDown':
         case ' ':
           e.preventDefault();
-          scrollProgress += 80;
+          scrollProgress += 100;
           break;
         case 'ArrowUp':
           e.preventDefault();
-          scrollProgress -= 80;
+          scrollProgress -= 100;
           break;
       }
       scrollProgress = Math.max(0, Math.min(scrollProgress, maxScroll));
-      requestTick();
+      updateAnimation();
     };
 
-    // Event listeners
+    // Ajout des event listeners
     window.addEventListener('wheel', handleWheel, { passive: false });
     window.addEventListener('touchstart', handleTouchStart, { passive: false });
     window.addEventListener('touchmove', handleTouchMove, { passive: false });
     window.addEventListener('keydown', handleKeyDown);
 
+    // Cleanup
     return () => {
       window.removeEventListener('wheel', handleWheel);
       window.removeEventListener('touchstart', handleTouchStart);
       window.removeEventListener('touchmove', handleTouchMove);
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [onAnimationComplete]);
+  }, []);
 
   return (
     <div className="batman-logo-container">
