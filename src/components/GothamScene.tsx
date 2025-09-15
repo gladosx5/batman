@@ -1,5 +1,6 @@
 import React from 'react';
 import BatmanLogo from './BatmanLogo';
+import ScrollIndicator from './ScrollIndicator';
 
 const GothamScene = () => {
   return (
@@ -15,10 +16,8 @@ const GothamScene = () => {
       {/* Batman Logo */}
       <BatmanLogo />
 
-      {/* Instructions overlay */}
-      <div className="instructions">
-        <p>Scrollez pour voir Batman sortir de Gotham (6-7 scrolls pour passer au premier plan)</p>
-      </div>
+      {/* Scroll Indicator */}
+      <ScrollIndicator />
     </div>
   );
 };
