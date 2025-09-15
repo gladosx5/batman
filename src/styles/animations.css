@@ -472,16 +472,32 @@
     width: 80px;
   }
   
-  .batman-logo-glow {
-    width: 80px;
-    height: 80px;
-  }
-  
   .moon {
     width: 15vmin;
     height: 15vmin;
     left: 15vmin;
     top: 10vmin;
+  }
+
+  .content-container {
+    padding: 60px 20px;
+  }
+
+  .content-container h1 {
+    font-size: 2.5rem;
+  }
+
+  .content-container h2 {
+    font-size: 2rem;
+  }
+
+  .content-container p {
+    font-size: 1.1rem;
+  }
+
+  .content-container section {
+    padding: 30px 20px;
+    margin-bottom: 60px;
   }
   
 }
@@ -491,13 +507,30 @@
     width: 60px;
   }
   
-  .batman-logo-glow {
-    width: 60px;
-    height: 60px;
-  }
-  
   .skyline {
     height: 50vh;
+  }
+
+  .content-container h1 {
+    font-size: 2rem;
+  }
+
+  .content-container h2 {
+    font-size: 1.5rem;
+  }
+
+  .content-container p {
+    font-size: 1rem;
+  }
+
+  .mouse-body {
+    width: 20px;
+    height: 32px;
+  }
+
+  .mouse-wheel {
+    width: 3px;
+    height: 6px;
   }
 }
 
@@ -528,23 +561,149 @@ body {
 }
 
 /* Instructions overlay */
-.instructions {
+.scroll-indicator {
   position: absolute;
-  bottom: 30px;
+  bottom: 40px;
   left: 50%;
   transform: translateX(-50%);
   z-index: 15;
-  text-align: center;
-  color: rgba(255, 255, 255, 0.7);
-  font-size: 14px;
-  font-family: 'Arial', sans-serif;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
-  animation: fade-in-out 3s ease-in-out infinite;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  opacity: 0.7;
 }
 
-@keyframes fade-in-out {
-  0%, 100% { opacity: 0.5; }
-  50% { opacity: 1; }
+.mouse-icon {
+  margin-bottom: 10px;
+}
+
+.mouse-body {
+  width: 24px;
+  height: 40px;
+  border: 2px solid rgba(255, 255, 255, 0.8);
+  border-radius: 12px;
+  position: relative;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+}
+
+.mouse-wheel {
+  width: 4px;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 2px;
+  position: absolute;
+  top: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  animation: mouse-wheel-scroll 2s ease-in-out infinite;
+}
+
+@keyframes mouse-wheel-scroll {
+  0%, 100% { 
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+  50% { 
+    opacity: 0.3;
+    transform: translateX(-50%) translateY(8px);
+  }
+}
+
+.scroll-arrows {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.arrow {
+  width: 0;
+  height: 0;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 8px solid rgba(255, 255, 255, 0.6);
+  animation: arrow-bounce 2s ease-in-out infinite;
+}
+
+.arrow:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.arrow:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes arrow-bounce {
+  0%, 100% { 
+    opacity: 0.3;
+    transform: translateY(0);
+  }
+  50% { 
+    opacity: 1;
+    transform: translateY(4px);
+  }
+}
+
+/* Website Content Styles */
+.website-wrapper {
+  position: absolute;
+  top: 100vh;
+  left: 0;
+  width: 100%;
+  min-height: 200vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  z-index: 10;
+}
+
+.website-content {
+  padding: 0;
+  margin: 0;
+}
+
+.content-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 80px 40px;
+  color: white;
+  font-family: 'Arial', sans-serif;
+  line-height: 1.6;
+}
+
+.content-container h1 {
+  font-size: 4rem;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 60px;
+  text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  background: linear-gradient(45deg, #fff, #f0f0f0);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.content-container h2 {
+  font-size: 2.5rem;
+  font-weight: 600;
+  margin: 60px 0 30px 0;
+  color: #f8f9fa;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.content-container section {
+  margin-bottom: 80px;
+  padding: 40px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.content-container p {
+  font-size: 1.2rem;
+  margin-bottom: 20px;
+  color: rgba(255, 255, 255, 0.9);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
 /* Focus pour les contrôles clavier */
