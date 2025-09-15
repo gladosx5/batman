@@ -1,21 +1,20 @@
 import React from 'react';
-import Header from './components/Header';
-import Hero from './components/Hero';
-import Menu from './components/Menu';
-import About from './components/About';
-import Contact from './components/Contact';
-import Footer from './components/Footer';
-import './styles/gotham-street.css';
+import GothamScene from './components/GothamScene';
+import FoodWebsite from './components/FoodWebsite';
+import { useScrollAnimation } from './hooks/useScrollAnimation';
+import './styles/animations.css';
+import './styles/food-website.css';
 
 function App() {
+  // Initialize scroll animations
+  useScrollAnimation();
+
   return (
-    <div className="gotham-street-app">
-      <Header />
-      <Hero />
-      <Menu />
-      <About />
-      <Contact />
-      <Footer />
+    <div className="app">
+      {/* Site web maintenant dans App pour qu'il soit scrollable */}
+      <FoodWebsite />
+      {/* Scène Gotham par-dessus */}
+      <GothamScene />
     </div>
   );
 }
