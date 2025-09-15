@@ -396,62 +396,63 @@ const FoodWebsite = () => {
 
       {/* Modal */}
       {selectedDish && (
-        <div 
-          className="modal-overlay" 
-          onClick={() => setSelectedDish(null)}
-        >
-          <div className="modal" onClick={(e) => e.stopPropagation()}>
-            <button 
-              className="modal-close" 
-              onClick={() => setSelectedDish(null)}
-              aria-label="Fermer"
-            >
-              ✕
-            </button>
-            <div className="modal-content">
-              <div className="modal-image-container">
-                <img 
-                  src={selectedDish.image} 
-                  alt={selectedDish.name} 
-                  className="modal-image"
-                />
-              </div>
-              <div className="modal-info">
-                <h2 className="modal-title">{selectedDish.name}</h2>
-                <p className="modal-desc">{selectedDish.desc}</p>
-                
-                <div className="modal-details">
-                  <h4>Composition :</h4>
-                  <p>{selectedDish.ingredients}</p>
+        <div className="modal-backdrop">
+          <div className="modal-container">
+            <div className="modal-box">
+              <button 
+                className="modal-close-btn" 
+                onClick={() => setSelectedDish(null)}
+                type="button"
+              >
+                ✕
+              </button>
+              
+              <div className="modal-body">
+                <div className="modal-left">
+                  <img 
+                    src={selectedDish.image} 
+                    alt={selectedDish.name} 
+                    className="modal-dish-image"
+                  />
                 </div>
                 
-                {selectedDish.allergens && selectedDish.allergens.length > 0 && (
-                  <div className="modal-allergens">
-                    <h4>Allergènes :</h4>
-                    <div className="allergen-list">
-                      {selectedDish.allergens.map((allergen, index) => (
-                        <span key={index} className="allergen-badge">
-                          {getAllergenIcon(allergen)} {allergen}
-                        </span>
-                      ))}
-                    </div>
+                <div className="modal-right">
+                  <h2 className="modal-dish-title">{selectedDish.name}</h2>
+                  <p className="modal-dish-desc">{selectedDish.desc}</p>
+                  
+                  <div className="modal-composition">
+                    <h4>Composition :</h4>
+                    <p>{selectedDish.ingredients}</p>
                   </div>
-                )}
-                
-                <div className="modal-price">{selectedDish.price}</div>
-                
-                <div className="modal-actions">
-                  <a href="tel:+33123456789" className="modal-cta primary">
-                    📞 Réserver par téléphone
-                  </a>
-                  <a 
-                    href="https://www.google.com/maps/dir//Gotham+Streat,+Rue+de+la+République,+Gaillac/@43.9028043,1.8975780,17z" 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="modal-cta secondary"
-                  >
-                    Itinéraire
-                  </a>
+                  
+                  {selectedDish.allergens && selectedDish.allergens.length > 0 && (
+                    <div className="modal-allergens-section">
+                      <h4>Allergènes :</h4>
+                      <div className="modal-allergens-list">
+                        {selectedDish.allergens.map((allergen, index) => (
+                          <span key={index} className="modal-allergen-tag">
+                            {getAllergenIcon(allergen)} {allergen}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  
+                  <div className="modal-dish-price">{selectedDish.price}</div>
+                  
+                  <div className="modal-buttons">
+                    <a href="tel:+33123456789" className="modal-btn modal-btn-primary">
+                      📞 Réserver par téléphone
+                    </a>
+                    <a 
+                      href="https://www.google.com/maps/dir//Gotham+Streat,+Rue+de+la+République,+Gaillac/@43.9028043,1.8975780,17z" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="modal-btn modal-btn-secondary"
+                    >
+                      Itinéraire
+                    </a>
+                  </div>
                 </div>
               </div>
             </div>
