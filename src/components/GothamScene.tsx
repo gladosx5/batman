@@ -1,5 +1,6 @@
 import React from 'react';
 import BatmanLogo from './BatmanLogo';
+import CityAnimation from './CityAnimation';
 
 const GothamScene = () => {
   return (
@@ -12,12 +13,15 @@ const GothamScene = () => {
       {/* Gotham City Skyline */}
       <div className="skyline"></div>
 
+      {/* City Animation Controller */}
+      <CityAnimation />
+
       {/* Batman Logo */}
       <BatmanLogo />
 
       {/* Instructions overlay */}
       <div className="instructions">
-        <p>Scrollez pour voir Batman sortir de Gotham (6-7 scrolls pour passer au premier plan)</p>
+        <p>Scrollez pour voir Batman sortir de Gotham, puis continuez pour aller sous la ville</p>
       </div>
     </div>
   );
