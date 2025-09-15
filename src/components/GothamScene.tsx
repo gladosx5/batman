@@ -4,7 +4,7 @@ import ScrollIndicator from './ScrollIndicator';
 
 const GothamScene = () => {
   return (
-    <div className="gotham-scene" tabIndex={0}>
+    <div className="gotham-scene" tabIndex={0} id="gotham-scene">
       {/* Sky with stars */}
       <div className="sky">
         <div className="moon"></div>

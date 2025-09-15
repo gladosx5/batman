@@ -20,6 +20,7 @@ const BatmanLogo = () => {
     let scrollProgress = 0;
     let sceneProgress = 0; // Nouveau: progression pour faire monter la scène
     let isAnimationComplete = false; // Nouveau: flag pour savoir si l'animation est terminée
+    let isInReverseMode = false; // Flag pour savoir si on est en mode retour
     const isMobile = window.innerWidth <= 768;
     const maxLogoScroll = isMobile ? 400 : 800; // Animation du logo
     const maxSceneScroll = isMobile ? 800 : 1200; // Animation de la scène qui monte
@@ -109,34 +110,84 @@ const BatmanLogo = () => {
 
     // Gestion du scroll de la molette (plus sensible)
     const handleWheel = (e: WheelEvent) => {
-      // Ne pas empêcher le scroll par défaut si l'animation est terminée
-      if (!isAnimationComplete) {
+      // Détecter si on est en haut de page pour activer le mode retour
+      const isAtTop = window.scrollY <= 10;
+      
+      // Si on scroll vers le haut en étant en haut de page, activer le mode retour
+      if (isAtTop && e.deltaY < 0 && isAnimationComplete) {
+        isInReverseMode = true;
+        isAnimationComplete = false;
+        // Réactiver la scène Gotham
+        const gothamScene = document.querySelector('.gotham-scene');
+        if (gothamScene) {
+          gsap.to(gothamScene, {
+            opacity: 1,
+            duration: 0.3,
+            ease: "power2.out"
+          });
+        }
+      }
+      
+      // Ne pas empêcher le scroll par défaut si l'animation est terminée ET qu'on n'est pas en mode retour
+      if (!isAnimationComplete && !isInReverseMode) {
         e.preventDefault();
-      } else {
+      } else if (isAnimationComplete && !isInReverseMode) {
         // Laisser le scroll normal fonctionner
         return;
       }
       
       const deltaY = e.deltaY * 1.5;
       
-      // Phase 1: Animation du logo
-      if (scrollProgress < maxLogoScroll && deltaY > 0) {
-        scrollProgress += deltaY;
-        scrollProgress = Math.min(scrollProgress, maxLogoScroll);
-      }
-      // Phase 2: Animation de la scène qui monte
-      else if (scrollProgress >= maxLogoScroll && deltaY > 0) {
-        sceneProgress += deltaY;
-        sceneProgress = Math.min(sceneProgress, maxSceneScroll);
-      }
-      // Remontée: d'abord la scène redescend, puis le logo
-      else if (deltaY < 0) {
-        if (sceneProgress > 0) {
-          sceneProgress += deltaY;
-          sceneProgress = Math.max(sceneProgress, 0);
+      // Si on est en mode retour, gérer l'animation inverse
+      if (isInReverseMode) {
+        e.preventDefault();
+        
+        if (deltaY < 0) {
+          // Scroll vers le haut: faire revenir l'animation
+          if (sceneProgress > 0) {
+            sceneProgress += deltaY;
+            sceneProgress = Math.max(sceneProgress, 0);
+          } else {
+            scrollProgress += deltaY;
+            scrollProgress = Math.max(scrollProgress, -500);
+          }
         } else {
+          // Scroll vers le bas: refaire l'animation
+          if (scrollProgress < maxLogoScroll) {
+            scrollProgress += deltaY;
+            scrollProgress = Math.min(scrollProgress, maxLogoScroll);
+          } else {
+            sceneProgress += deltaY;
+            sceneProgress = Math.min(sceneProgress, maxSceneScroll);
+          }
+        }
+        
+        // Sortir du mode retour si on atteint la fin de l'animation
+        if (sceneProgress >= maxSceneScroll) {
+          isInReverseMode = false;
+          isAnimationComplete = true;
+        }
+      } else {
+        // Mode normal: animation initiale
+        // Phase 1: Animation du logo
+        if (scrollProgress < maxLogoScroll && deltaY > 0) {
           scrollProgress += deltaY;
-          scrollProgress = Math.max(scrollProgress, -500); // Permet de remonter plus pour faire disparaître le logo
+          scrollProgress = Math.min(scrollProgress, maxLogoScroll);
+        }
+        // Phase 2: Animation de la scène qui monte
+        else if (scrollProgress >= maxLogoScroll && deltaY > 0) {
+          sceneProgress += deltaY;
+          sceneProgress = Math.min(sceneProgress, maxSceneScroll);
+        }
+        // Remontée: d'abord la scène redescend, puis le logo
+        else if (deltaY < 0) {
+          if (sceneProgress > 0) {
+            sceneProgress += deltaY;
+            sceneProgress = Math.max(sceneProgress, 0);
+          } else {
+            scrollProgress += deltaY;
+            scrollProgress = Math.max(scrollProgress, -500);
+          }
         }
       }
       
@@ -151,33 +202,81 @@ const BatmanLogo = () => {
     };
 
     const handleTouchMove = (e: TouchEvent) => {
-      // Ne pas empêcher le scroll par défaut si l'animation est terminée
-      if (!isAnimationComplete) {
+      // Détecter si on est en haut de page pour activer le mode retour
+      const isAtTop = window.scrollY <= 10;
+      const touchY = e.touches[0].clientY;
+      const deltaY = (touchStartY - touchY) * 2;
+      
+      // Si on scroll vers le haut en étant en haut de page, activer le mode retour
+      if (isAtTop && deltaY < 0 && isAnimationComplete) {
+        isInReverseMode = true;
+        isAnimationComplete = false;
+        // Réactiver la scène Gotham
+        const gothamScene = document.querySelector('.gotham-scene');
+        if (gothamScene) {
+          gsap.to(gothamScene, {
+            opacity: 1,
+            duration: 0.3,
+            ease: "power2.out"
+          });
+        }
+      }
+      
+      // Ne pas empêcher le scroll par défaut si l'animation est terminée ET qu'on n'est pas en mode retour
+      if (!isAnimationComplete && !isInReverseMode) {
         e.preventDefault();
-      } else {
+      } else if (isAnimationComplete && !isInReverseMode) {
         // Laisser le scroll normal fonctionner
         return;
       }
       
-      const touchY = e.touches[0].clientY;
-      const deltaY = (touchStartY - touchY) * 2; // Réduit la sensibilité tactile
-      
-      // Même logique que pour la molette
-      if (scrollProgress < maxLogoScroll && deltaY > 0) {
-        scrollProgress += deltaY;
-        scrollProgress = Math.min(scrollProgress, maxLogoScroll);
-      }
-      else if (scrollProgress >= maxLogoScroll && deltaY > 0) {
-        sceneProgress += deltaY;
-        sceneProgress = Math.min(sceneProgress, maxSceneScroll);
-      }
-      else if (deltaY < 0) {
-        if (sceneProgress > 0) {
-          sceneProgress += deltaY;
-          sceneProgress = Math.max(sceneProgress, 0);
+      // Si on est en mode retour, gérer l'animation inverse
+      if (isInReverseMode) {
+        e.preventDefault();
+        
+        if (deltaY < 0) {
+          // Scroll vers le haut: faire revenir l'animation
+          if (sceneProgress > 0) {
+            sceneProgress += deltaY;
+            sceneProgress = Math.max(sceneProgress, 0);
+          } else {
+            scrollProgress += deltaY;
+            scrollProgress = Math.max(scrollProgress, -500);
+          }
         } else {
+          // Scroll vers le bas: refaire l'animation
+          if (scrollProgress < maxLogoScroll) {
+            scrollProgress += deltaY;
+            scrollProgress = Math.min(scrollProgress, maxLogoScroll);
+          } else {
+            sceneProgress += deltaY;
+            sceneProgress = Math.min(sceneProgress, maxSceneScroll);
+          }
+        }
+        
+        // Sortir du mode retour si on atteint la fin de l'animation
+        if (sceneProgress >= maxSceneScroll) {
+          isInReverseMode = false;
+          isAnimationComplete = true;
+        }
+      } else {
+        // Mode normal: même logique que pour la molette
+        if (scrollProgress < maxLogoScroll && deltaY > 0) {
           scrollProgress += deltaY;
-          scrollProgress = Math.max(scrollProgress, -500);
+          scrollProgress = Math.min(scrollProgress, maxLogoScroll);
+        }
+        else if (scrollProgress >= maxLogoScroll && deltaY > 0) {
+          sceneProgress += deltaY;
+          sceneProgress = Math.min(sceneProgress, maxSceneScroll);
+        }
+        else if (deltaY < 0) {
+          if (sceneProgress > 0) {
+            sceneProgress += deltaY;
+            sceneProgress = Math.max(sceneProgress, 0);
+          } else {
+            scrollProgress += deltaY;
+            scrollProgress = Math.max(scrollProgress, -500);
+          }
         }
       }
       
@@ -188,8 +287,26 @@ const BatmanLogo = () => {
 
     // Gestion des touches clavier
     const handleKeyDown = (e: KeyboardEvent) => {
-      // Ne pas intercepter les touches si l'animation est terminée
-      if (isAnimationComplete) {
+      // Détecter si on est en haut de page pour activer le mode retour
+      const isAtTop = window.scrollY <= 10;
+      
+      // Si on appuie sur flèche haut en étant en haut de page, activer le mode retour
+      if (isAtTop && e.key === 'ArrowUp' && isAnimationComplete) {
+        isInReverseMode = true;
+        isAnimationComplete = false;
+        // Réactiver la scène Gotham
+        const gothamScene = document.querySelector('.gotham-scene');
+        if (gothamScene) {
+          gsap.to(gothamScene, {
+            opacity: 1,
+            duration: 0.3,
+            ease: "power2.out"
+          });
+        }
+      }
+      
+      // Ne pas intercepter les touches si l'animation est terminée ET qu'on n'est pas en mode retour
+      if (isAnimationComplete && !isInReverseMode) {
         return;
       }
       
@@ -207,21 +324,53 @@ const BatmanLogo = () => {
       }
       
       if (deltaY !== 0) {
-        if (scrollProgress < maxLogoScroll && deltaY > 0) {
-          scrollProgress += deltaY;
-          scrollProgress = Math.min(scrollProgress, maxLogoScroll);
-        }
-        else if (scrollProgress >= maxLogoScroll && deltaY > 0) {
-          sceneProgress += deltaY;
-          sceneProgress = Math.min(sceneProgress, maxSceneScroll);
-        }
-        else if (deltaY < 0) {
-          if (sceneProgress > 0) {
-            sceneProgress += deltaY;
-            sceneProgress = Math.max(sceneProgress, 0);
+        e.preventDefault();
+        
+        // Si on est en mode retour, gérer l'animation inverse
+        if (isInReverseMode) {
+          if (deltaY < 0) {
+            // Flèche haut: faire revenir l'animation
+            if (sceneProgress > 0) {
+              sceneProgress += deltaY;
+              sceneProgress = Math.max(sceneProgress, 0);
+            } else {
+              scrollProgress += deltaY;
+              scrollProgress = Math.max(scrollProgress, -500);
+            }
           } else {
+            // Flèche bas: refaire l'animation
+            if (scrollProgress < maxLogoScroll) {
+              scrollProgress += deltaY;
+              scrollProgress = Math.min(scrollProgress, maxLogoScroll);
+            } else {
+              sceneProgress += deltaY;
+              sceneProgress = Math.min(sceneProgress, maxSceneScroll);
+            }
+          }
+          
+          // Sortir du mode retour si on atteint la fin de l'animation
+          if (sceneProgress >= maxSceneScroll) {
+            isInReverseMode = false;
+            isAnimationComplete = true;
+          }
+        } else {
+          // Mode normal
+          if (scrollProgress < maxLogoScroll && deltaY > 0) {
             scrollProgress += deltaY;
-            scrollProgress = Math.max(scrollProgress, -500);
+            scrollProgress = Math.min(scrollProgress, maxLogoScroll);
+          }
+          else if (scrollProgress >= maxLogoScroll && deltaY > 0) {
+            sceneProgress += deltaY;
+            sceneProgress = Math.min(sceneProgress, maxSceneScroll);
+          }
+          else if (deltaY < 0) {
+            if (sceneProgress > 0) {
+              sceneProgress += deltaY;
+              sceneProgress = Math.max(sceneProgress, 0);
+            } else {
+              scrollProgress += deltaY;
+              scrollProgress = Math.max(scrollProgress, -500);
+            }
           }
         }
       }
