@@ -428,12 +428,12 @@
 }
 
 .batman-logo {
-  width: 100px;
+  width: 80px;
   height: auto;
   display: block;
   will-change: transform, opacity, filter;
   transition: none;
-  filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.3));
+  filter: drop-shadow(0 0 30px rgba(255, 255, 255, 0.5));
 }
 
 

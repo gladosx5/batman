@@ -14,70 +14,64 @@ const BatmanLogo: React.FC<BatmanLogoProps> = ({ onAnimationComplete }) => {
 
     // État initial - logo petit et caché derrière les toits
     gsap.set(logo, {
-      scale: 0.3,
-      y: 200,
-      opacity: 0.8,
+      scale: 0.2,
+      y: 300,
+      opacity: 0.6,
       zIndex: 2,
       transformOrigin: "center center"
     });
 
     let scrollProgress = 0;
-    const maxScroll = 1000; // Réduit de 2000 à 1000 pour une animation plus courte
-    const startGrowingAt = 200; // Commence plus tôt
-    const foregroundAt = 350; // Passe au premier plan plus tôt
-    const animationCompleteAt = 800; // Animation terminée plus tôt
+    const maxScroll = 800; // Animation plus courte
+    const animationCompleteAt = 700; // Animation terminée à 700
 
     let animationComplete = false;
 
     const updateAnimation = () => {
       const progress = Math.min(scrollProgress / maxScroll, 1);
       
-      let yPosition, scale, zIndex;
-      
-      if (scrollProgress < startGrowingAt) {
-        // Phase 1: Montée légère
-        const earlyProgress = scrollProgress / startGrowingAt;
-        yPosition = 200 - (earlyProgress * 80);
-        scale = 0.3;
-        zIndex = 2;
-      } else if (scrollProgress < foregroundAt) {
-        // Phase 2: Montée + grossissement modéré
-        const midProgress = (scrollProgress - startGrowingAt) / (foregroundAt - startGrowingAt);
-        yPosition = 120 - (midProgress * 80);
-        scale = 0.3 + (midProgress * 1.7); // Grossit jusqu'à 2.0
-        zIndex = 2;
-      } else if (scrollProgress < animationCompleteAt) {
-        // Phase 3: Premier plan + grossissement final
-        const lateProgress = (scrollProgress - foregroundAt) / (animationCompleteAt - foregroundAt);
-        yPosition = 40 - (lateProgress * 40);
-        scale = 2.0 + (lateProgress * 1.5); // Grossit jusqu'à 3.5 (plus raisonnable)
-        zIndex = 100;
+      if (scrollProgress < animationCompleteAt) {
+        // Animation progressive du logo
+        const animProgress = scrollProgress / animationCompleteAt;
+        
+        // Position Y : monte progressivement
+        const yPosition = 300 - (animProgress * 300); // De 300 à 0
+        
+        // Scale : grossit progressivement et beaucoup plus
+        const scale = 0.2 + (animProgress * 4.8); // De 0.2 à 5.0 (très gros)
+        
+        // Opacité
+        const opacity = 0.6 + (animProgress * 0.4); // De 0.6 à 1.0
+        
+        // Z-index change à mi-parcours
+        const zIndex = animProgress > 0.5 ? 100 : 2;
+        
+        gsap.set(logo, {
+          y: yPosition,
+          scale: scale,
+          opacity: opacity,
+          zIndex: zIndex
+        });
+        
+        // Marquer l'animation comme incomplète si on redescend
+        if (animationComplete) {
+          animationComplete = false;
+          onAnimationComplete(false);
+        }
       } else {
-        // Phase 4: Logo fixe au-dessus de la ville
-        yPosition = 0;
-        scale = 3.5;
-        zIndex = 100;
+        // Animation terminée - logo fixe et très gros
+        gsap.set(logo, {
+          y: 0,
+          scale: 5.0,
+          opacity: 1,
+          zIndex: 100
+        });
         
         if (!animationComplete) {
           animationComplete = true;
           onAnimationComplete(true);
         }
       }
-      
-      // Animation inverse si on remonte complètement en haut
-      if (scrollProgress === 0 && animationComplete) {
-        animationComplete = false;
-        onAnimationComplete(false);
-      }
-      
-      gsap.to(logo, {
-        y: yPosition,
-        scale: scale,
-        opacity: 0.8 + (progress * 0.2),
-        zIndex: zIndex,
-        duration: 0.2,
-        ease: "power2.out"
-      });
     };
 
     // Gestion optimisée du scroll avec requestAnimationFrame
@@ -93,7 +87,7 @@ const BatmanLogo: React.FC<BatmanLogoProps> = ({ onAnimationComplete }) => {
 
     const handleWheel = (e: WheelEvent) => {
       e.preventDefault();
-      scrollProgress += e.deltaY * 1.5; // Réduit la sensibilité
+      scrollProgress += e.deltaY * 1.2;
       scrollProgress = Math.max(0, Math.min(scrollProgress, maxScroll));
       requestTick();
     };
@@ -120,11 +114,11 @@ const BatmanLogo: React.FC<BatmanLogoProps> = ({ onAnimationComplete }) => {
         case 'ArrowDown':
         case ' ':
           e.preventDefault();
-          scrollProgress += 80;
+          scrollProgress += 60;
           break;
         case 'ArrowUp':
           e.preventDefault();
-          scrollProgress -= 80;
+          scrollProgress -= 60;
           break;
       }
       scrollProgress = Math.max(0, Math.min(scrollProgress, maxScroll));

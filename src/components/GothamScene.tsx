@@ -14,13 +14,13 @@ const GothamScene = () => {
     if (isComplete && !showWebsite) {
       setShowScrollIndicator(false);
       
-      // Transition vers le site-vitrine
+      // Transition vers le site-vitrine SEULEMENT après la fin de l'animation du logo
       setTimeout(() => {
         setShowWebsite(true);
         animateWebsiteEntry();
       }, 500);
     } else if (!isComplete && showWebsite) {
-      // Animation inverse
+      // Animation inverse SEULEMENT si on remonte complètement
       animateWebsiteExit();
       setTimeout(() => {
         setShowWebsite(false);
@@ -34,7 +34,7 @@ const GothamScene = () => {
     const website = websiteRef.current;
     
     if (skyline && website) {
-      // La ville se soulève
+      // La ville se soulève SEULEMENT maintenant
       gsap.to(skyline, {
         y: -window.innerHeight,
         duration: 1.5,
@@ -80,39 +80,8 @@ const GothamScene = () => {
     }
   };
 
-  useEffect(() => {
-    // Parallaxe légère sur la ville pendant le scroll
-    const skyline = skylineRef.current;
-    if (!skyline) return;
-
-    let scrollProgress = 0;
-    const maxScroll = 1000;
-
-    const updateParallax = () => {
-      const progress = Math.min(scrollProgress / maxScroll, 1);
-      const parallaxOffset = progress * 20; // Effet parallaxe subtil
-      
-      gsap.to(skyline, {
-        y: parallaxOffset,
-        duration: 0.3,
-        ease: "power2.out"
-      });
-    };
-
-    const handleWheel = (e: WheelEvent) => {
-      if (!showWebsite) {
-        scrollProgress += e.deltaY * 1.5;
-        scrollProgress = Math.max(0, Math.min(scrollProgress, maxScroll));
-        updateParallax();
-      }
-    };
-
-    window.addEventListener('wheel', handleWheel, { passive: true });
-
-    return () => {
-      window.removeEventListener('wheel', handleWheel);
-    };
-  }, [showWebsite]);
+  // SUPPRIMER l'effet parallaxe sur la ville pendant l'animation du logo
+  // La ville ne bouge plus du tout tant que l'animation n'est pas terminée
 
   return (
     <div className="gotham-scene" tabIndex={0}>
@@ -121,7 +90,7 @@ const GothamScene = () => {
         <div className="moon"></div>
       </div>
 
-      {/* Gotham City Skyline */}
+      {/* Gotham City Skyline - NE BOUGE PAS pendant l'animation du logo */}
       <div ref={skylineRef} className="skyline"></div>
 
       {/* Batman Logo */}
