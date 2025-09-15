@@ -29,9 +29,6 @@
   width: 100vw;
   height: 100vh;
   overflow: hidden;
-  position: fixed;
-  top: 0;
-  left: 0;
   background-color: #1f1f1f;
   background-image: linear-gradient(315deg, #0cbaba 0%, #380036 74%);
 }
@@ -529,14 +526,9 @@
 /* Smooth scrolling */
 html {
   scroll-behavior: smooth;
-  height: 100vh;
-  overflow: hidden;
 }
 
 /* Prevent horizontal overflow */
 body {
-  overflow: hidden;
-  height: 100vh;
-  margin: 0;
-  padding: 0;
+  overflow-x: hidden;
 }
