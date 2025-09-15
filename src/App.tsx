@@ -9,11 +9,7 @@ function App() {
 
   return (
     <div className="app">
-      {/* Main Gotham Scene */}
       <GothamScene />
-      
-      {/* Espace pour permettre le scroll */}
-      <div style={{ height: '200vh' }}></div>
     </div>
   );
 }

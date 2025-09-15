@@ -1,85 +1,152 @@
 import React, { useRef, useEffect } from 'react';
 import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
-gsap.registerPlugin(ScrollTrigger);
+interface BatmanLogoProps {
+  onAnimationComplete: (isComplete: boolean) => void;
+}
 
-const BatmanLogo = () => {
+const BatmanLogo: React.FC<BatmanLogoProps> = ({ onAnimationComplete }) => {
   const logoRef = useRef<HTMLImageElement>(null);
-  const glowRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const logo = logoRef.current;
-    const glow = glowRef.current;
+    if (!logo) return;
 
-    if (!logo || !glow) return;
-
-    // Initial state
+    // État initial - logo petit et caché derrière les toits
     gsap.set(logo, {
       scale: 0.3,
-      y: 100,
-      opacity: 0,
-      rotationY: -15,
-      transformOrigin: "center center",
-      filter: "brightness(0.3)"
+      y: 200,
+      opacity: 0.8,
+      zIndex: 2,
+      transformOrigin: "center center"
     });
 
-    gsap.set(glow, {
-      scale: 0,
-      opacity: 0
-    });
+    let scrollProgress = 0;
+    const maxScroll = 1000; // Réduit de 2000 à 1000 pour une animation plus courte
+    const startGrowingAt = 200; // Commence plus tôt
+    const foregroundAt = 350; // Passe au premier plan plus tôt
+    const animationCompleteAt = 800; // Animation terminée plus tôt
 
-    // Main animation timeline
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: ".gotham-scene",
-        start: "top top",
-        end: "bottom top",
-        scrub: 1.5,
-        pin: true,
-        anticipatePin: 1,
-        onUpdate: (self) => {
-          // Dynamic glow intensity based on scroll progress
-          const progress = self.progress;
-          const glowIntensity = progress * 30;
-          gsap.set(glow, {
-            boxShadow: `0 0 ${glowIntensity}px ${glowIntensity * 0.5}px rgba(255, 215, 0, ${progress * 0.8}), 
-                       0 0 ${glowIntensity * 2}px ${glowIntensity}px rgba(255, 255, 255, ${progress * 0.3})`
-          });
+    let animationComplete = false;
+
+    const updateAnimation = () => {
+      const progress = Math.min(scrollProgress / maxScroll, 1);
+      
+      let yPosition, scale, zIndex;
+      
+      if (scrollProgress < startGrowingAt) {
+        // Phase 1: Montée légère
+        const earlyProgress = scrollProgress / startGrowingAt;
+        yPosition = 200 - (earlyProgress * 80);
+        scale = 0.3;
+        zIndex = 2;
+      } else if (scrollProgress < foregroundAt) {
+        // Phase 2: Montée + grossissement modéré
+        const midProgress = (scrollProgress - startGrowingAt) / (foregroundAt - startGrowingAt);
+        yPosition = 120 - (midProgress * 80);
+        scale = 0.3 + (midProgress * 1.7); // Grossit jusqu'à 2.0
+        zIndex = 2;
+      } else if (scrollProgress < animationCompleteAt) {
+        // Phase 3: Premier plan + grossissement final
+        const lateProgress = (scrollProgress - foregroundAt) / (animationCompleteAt - foregroundAt);
+        yPosition = 40 - (lateProgress * 40);
+        scale = 2.0 + (lateProgress * 1.5); // Grossit jusqu'à 3.5 (plus raisonnable)
+        zIndex = 100;
+      } else {
+        // Phase 4: Logo fixe au-dessus de la ville
+        yPosition = 0;
+        scale = 3.5;
+        zIndex = 100;
+        
+        if (!animationComplete) {
+          animationComplete = true;
+          onAnimationComplete(true);
         }
       }
-    });
-
-    // Logo emergence animation
-    tl.to(logo, {
-      opacity: 1,
-      duration: 0.3,
-      ease: "power2.out"
-    })
-    .to(logo, {
-      y: -100,
-      scale: 1.5,
-      rotationY: 0,
-      filter: "brightness(1.2)",
-      duration: 0.7,
-      ease: "cubic-bezier(0.25, 0.46, 0.45, 0.94)"
-    }, 0.1)
-    .to(glow, {
-      scale: 2,
-      opacity: 1,
-      duration: 0.8,
-      ease: "power2.out"
-    }, 0.2);
-
-    // Cleanup
-    return () => {
-      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+      
+      // Animation inverse si on remonte complètement en haut
+      if (scrollProgress === 0 && animationComplete) {
+        animationComplete = false;
+        onAnimationComplete(false);
+      }
+      
+      gsap.to(logo, {
+        y: yPosition,
+        scale: scale,
+        opacity: 0.8 + (progress * 0.2),
+        zIndex: zIndex,
+        duration: 0.2,
+        ease: "power2.out"
+      });
     };
-  }, []);
+
+    // Gestion optimisée du scroll avec requestAnimationFrame
+    let ticking = false;
+    
+    const requestTick = () => {
+      if (!ticking) {
+        requestAnimationFrame(updateAnimation);
+        ticking = true;
+        setTimeout(() => { ticking = false; }, 16); // 60fps
+      }
+    };
+
+    const handleWheel = (e: WheelEvent) => {
+      e.preventDefault();
+      scrollProgress += e.deltaY * 1.5; // Réduit la sensibilité
+      scrollProgress = Math.max(0, Math.min(scrollProgress, maxScroll));
+      requestTick();
+    };
+
+    let touchStartY = 0;
+    const handleTouchStart = (e: TouchEvent) => {
+      touchStartY = e.touches[0].clientY;
+    };
+
+    const handleTouchMove = (e: TouchEvent) => {
+      e.preventDefault();
+      const touchY = e.touches[0].clientY;
+      const deltaY = (touchStartY - touchY) * 2;
+      
+      scrollProgress += deltaY;
+      scrollProgress = Math.max(0, Math.min(scrollProgress, maxScroll));
+      
+      requestTick();
+      touchStartY = touchY;
+    };
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      switch(e.key) {
+        case 'ArrowDown':
+        case ' ':
+          e.preventDefault();
+          scrollProgress += 80;
+          break;
+        case 'ArrowUp':
+          e.preventDefault();
+          scrollProgress -= 80;
+          break;
+      }
+      scrollProgress = Math.max(0, Math.min(scrollProgress, maxScroll));
+      requestTick();
+    };
+
+    // Event listeners
+    window.addEventListener('wheel', handleWheel, { passive: false });
+    window.addEventListener('touchstart', handleTouchStart, { passive: false });
+    window.addEventListener('touchmove', handleTouchMove, { passive: false });
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      window.removeEventListener('wheel', handleWheel);
+      window.removeEventListener('touchstart', handleTouchStart);
+      window.removeEventListener('touchmove', handleTouchMove);
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [onAnimationComplete]);
 
   return (
     <div className="batman-logo-container">
-      <div ref={glowRef} className="batman-logo-glow"></div>
       <img 
         ref={logoRef}
         src="https://i.imgur.com/pXyfwCg.png"
