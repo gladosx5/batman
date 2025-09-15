@@ -11,9 +11,9 @@ function App() {
 
   return (
     <div className="app">
-      {/* Site web maintenant dans App pour qu'il soit scrollable */}
+      {/* Site web Gotham Streat */}
       <FoodWebsite />
-      {/* Scène Gotham par-dessus */}
+      {/* Scène Gotham avec animation Batman par-dessus */}
       <GothamScene />
     </div>
   );
