@@ -18,7 +18,8 @@ const BatmanLogo = () => {
     });
 
     let scrollProgress = 0;
-    const maxScroll = 800; // Réduit pour une animation plus courte
+    const isMobile = window.innerWidth <= 768;
+    const maxScroll = isMobile ? 400 : 800; // Beaucoup moins de scroll sur mobile
     
     // Animation fluide et progressive
     const updateAnimation = () => {
