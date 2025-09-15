@@ -18,12 +18,14 @@ const BatmanLogo = () => {
     });
 
     let scrollProgress = 0;
+    let sceneProgress = 0; // Nouveau: progression pour faire monter la scène
     const isMobile = window.innerWidth <= 768;
-    const maxScroll = isMobile ? 400 : 800; // Beaucoup moins de scroll sur mobile
+    const maxLogoScroll = isMobile ? 400 : 800; // Animation du logo
+    const maxSceneScroll = isMobile ? 800 : 1200; // Animation de la scène qui monte
     
-    // Animation fluide et progressive
+    // Animation du logo (phase 1)
     const updateAnimation = () => {
-      const progress = Math.min(scrollProgress / maxScroll, 1);
+      const progress = Math.min(scrollProgress / maxLogoScroll, 1);
       
       // Courbe d'animation avec démarrage retardé pour le zoom
       const moveProgress = 1 - Math.pow(1 - progress, 3); // Ease out cubic pour le mouvement
@@ -56,14 +58,64 @@ const BatmanLogo = () => {
       });
     };
 
+    // Animation de la scène qui monte (phase 2)
+    const updateSceneAnimation = () => {
+      const gothamScene = document.querySelector('.gotham-scene');
+      if (!gothamScene) return;
+
+      // Calcul de la progression pour faire monter la scène
+      const sceneProgressNormalized = Math.min(Math.max(sceneProgress / maxSceneScroll, 0), 1);
+      
+      // La scène monte progressivement
+      const translateY = -sceneProgressNormalized * 100; // Monte de 0 à -100vh
+      
+      gsap.to(gothamScene, {
+        y: `${translateY}vh`,
+        duration: 0.4,
+        ease: "power2.out"
+      });
+
+      // Animation de disparition du logo seulement si on remonte ET que la scène est revenue en place
+      if (sceneProgressNormalized <= 0 && scrollProgress < -200) {
+        const disappearProgress = Math.min(Math.abs(scrollProgress + 200) / 300, 1);
+        gsap.to(logo, {
+          opacity: 1 - disappearProgress,
+          scale: 4 - (disappearProgress * 3),
+          duration: 0.4,
+          ease: "power2.out"
+        });
+      }
+    };
+
     // Gestion du scroll de la molette (plus sensible)
     const handleWheel = (e: WheelEvent) => {
       e.preventDefault();
       
-      scrollProgress += e.deltaY * 1.5; // Réduit la sensibilité
-      scrollProgress = Math.max(0, Math.min(scrollProgress, maxScroll));
+      const deltaY = e.deltaY * 1.5;
+      
+      // Phase 1: Animation du logo
+      if (scrollProgress < maxLogoScroll && deltaY > 0) {
+        scrollProgress += deltaY;
+        scrollProgress = Math.min(scrollProgress, maxLogoScroll);
+      }
+      // Phase 2: Animation de la scène qui monte
+      else if (scrollProgress >= maxLogoScroll && deltaY > 0) {
+        sceneProgress += deltaY;
+        sceneProgress = Math.min(sceneProgress, maxSceneScroll);
+      }
+      // Remontée: d'abord la scène redescend, puis le logo
+      else if (deltaY < 0) {
+        if (sceneProgress > 0) {
+          sceneProgress += deltaY;
+          sceneProgress = Math.max(sceneProgress, 0);
+        } else {
+          scrollProgress += deltaY;
+          scrollProgress = Math.max(scrollProgress, -500); // Permet de remonter plus pour faire disparaître le logo
+        }
+      }
       
       updateAnimation();
+      updateSceneAnimation();
     };
 
     // Gestion du scroll tactile
@@ -77,28 +129,67 @@ const BatmanLogo = () => {
       const touchY = e.touches[0].clientY;
       const deltaY = (touchStartY - touchY) * 2; // Réduit la sensibilité tactile
       
-      scrollProgress += deltaY;
-      scrollProgress = Math.max(0, Math.min(scrollProgress, maxScroll));
+      // Même logique que pour la molette
+      if (scrollProgress < maxLogoScroll && deltaY > 0) {
+        scrollProgress += deltaY;
+        scrollProgress = Math.min(scrollProgress, maxLogoScroll);
+      }
+      else if (scrollProgress >= maxLogoScroll && deltaY > 0) {
+        sceneProgress += deltaY;
+        sceneProgress = Math.min(sceneProgress, maxSceneScroll);
+      }
+      else if (deltaY < 0) {
+        if (sceneProgress > 0) {
+          sceneProgress += deltaY;
+          sceneProgress = Math.max(sceneProgress, 0);
+        } else {
+          scrollProgress += deltaY;
+          scrollProgress = Math.max(scrollProgress, -500);
+        }
+      }
       
       updateAnimation();
+      updateSceneAnimation();
       touchStartY = touchY;
     };
 
     // Gestion des touches clavier
     const handleKeyDown = (e: KeyboardEvent) => {
+      let deltaY = 0;
       switch(e.key) {
         case 'ArrowDown':
         case ' ':
           e.preventDefault();
-          scrollProgress += 60; // Réduit l'incrémentation
+          deltaY = 60;
           break;
         case 'ArrowUp':
           e.preventDefault();
-          scrollProgress -= 60;
+          deltaY = -60;
           break;
       }
-      scrollProgress = Math.max(0, Math.min(scrollProgress, maxScroll));
+      
+      if (deltaY !== 0) {
+        if (scrollProgress < maxLogoScroll && deltaY > 0) {
+          scrollProgress += deltaY;
+          scrollProgress = Math.min(scrollProgress, maxLogoScroll);
+        }
+        else if (scrollProgress >= maxLogoScroll && deltaY > 0) {
+          sceneProgress += deltaY;
+          sceneProgress = Math.min(sceneProgress, maxSceneScroll);
+        }
+        else if (deltaY < 0) {
+          if (sceneProgress > 0) {
+            sceneProgress += deltaY;
+            sceneProgress = Math.max(sceneProgress, 0);
+          } else {
+            scrollProgress += deltaY;
+            scrollProgress = Math.max(scrollProgress, -500);
+          }
+        }
+      }
+      
       updateAnimation();
+      updateSceneAnimation();
     };
 
     // Ajout des event listeners

@@ -2,6 +2,7 @@ import React from 'react';
 import GothamScene from './components/GothamScene';
 import { useScrollAnimation } from './hooks/useScrollAnimation';
 import './styles/animations.css';
+import './styles/food-website.css';
 
 function App() {
   // Initialize scroll animations
