@@ -10,7 +10,7 @@ const BatmanLogo = () => {
 
     // État initial - logo petit et caché derrière les toits
     gsap.set(logo, {
-      scale: 0.2,
+      scale: 0.1,
       y: 250,
       opacity: 0.6,
       zIndex: 2,
@@ -24,24 +24,25 @@ const BatmanLogo = () => {
     const updateAnimation = () => {
       const progress = Math.min(scrollProgress / maxScroll, 1);
       
-      // Courbe d'animation plus douce
-      const easeProgress = 1 - Math.pow(1 - progress, 3); // Ease out cubic
+      // Courbe d'animation avec démarrage retardé pour le zoom
+      const moveProgress = 1 - Math.pow(1 - progress, 3); // Ease out cubic pour le mouvement
+      const zoomProgress = progress > 0.3 ? Math.pow((progress - 0.3) / 0.7, 2) : 0; // Zoom commence après 30% du scroll
       
       // Position Y: monte progressivement
-      const yPosition = 250 - (easeProgress * 300); // De 250 à -50
+      const yPosition = 250 - (moveProgress * 300); // De 250 à -50
       
-      // Scale: grossit modérément
-      const scale = 0.2 + (easeProgress * 2.8); // De 0.2 à 3.0 (zoom x3)
+      // Scale: commence très petit, puis zoom plus tard et plus fort
+      const scale = 0.1 + (zoomProgress * 3.9); // De 0.1 à 4.0 (zoom x4)
       
       // Opacité: devient plus visible
-      const opacity = 0.6 + (easeProgress * 0.4); // De 0.6 à 1.0
+      const opacity = 0.6 + (moveProgress * 0.4); // De 0.6 à 1.0
       
       // Z-index: passe au premier plan progressivement
       const zIndex = progress > 0.4 ? 100 : 2;
       
       // Effet de glow qui s'intensifie
-      const glowIntensity = easeProgress * 30;
-      const filter = `drop-shadow(0 0 ${glowIntensity}px rgba(255, 255, 255, ${easeProgress * 0.8}))`;
+      const glowIntensity = zoomProgress * 40;
+      const filter = `drop-shadow(0 0 ${glowIntensity}px rgba(255, 255, 255, ${zoomProgress * 0.9}))`;
       
       gsap.to(logo, {
         y: yPosition,
