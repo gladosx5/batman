@@ -396,7 +396,11 @@ const FoodWebsite = () => {
 
       {/* Modal */}
       {selectedDish && (
-        <div className="modal-overlay" onClick={() => setSelectedDish(null)}>
+        <div 
+          className="modal-overlay" 
+          onClick={() => setSelectedDish(null)}
+          style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0 }}
+        >
           <div className="modal" onClick={(e) => e.stopPropagation()}>
             <button 
               className="modal-close" 
