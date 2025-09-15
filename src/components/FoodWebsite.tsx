@@ -4,6 +4,19 @@ const FoodWebsite = () => {
   const [activeCategory, setActiveCategory] = useState('tous');
   const [selectedDish, setSelectedDish] = useState(null);
 
+  // Bloquer le scroll quand la modal est ouverte
+  useEffect(() => {
+    if (selectedDish) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    
+    // Cleanup au démontage du composant
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [selectedDish]);
   // Menu data basé sur tes spécifications
   const menuData = [
     {

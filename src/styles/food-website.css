@@ -56,6 +56,8 @@ body {
   align-items: center;
   justify-content: space-between;
   padding: 1rem 0;
+  flex-wrap: wrap;
+  gap: 1rem;
 }
 
 .logo-text {
@@ -64,11 +66,14 @@ body {
   color: var(--accent);
   text-shadow: 0 0 14px rgba(255, 214, 0, 0.25);
   letter-spacing: 2px;
+  flex-shrink: 0;
 }
 
 .nav {
   display: flex;
   gap: 2rem;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 .nav-link {
@@ -97,6 +102,8 @@ body {
 .header-actions {
   display: flex;
   gap: 1rem;
+  flex-wrap: wrap;
+  flex-shrink: 0;
 }
 
 .cta-button {
@@ -110,6 +117,8 @@ body {
   transition: var(--transition);
   border-radius: 6px;
   font-size: 0.9rem;
+  white-space: nowrap;
+  min-width: fit-content;
 }
 
 .cta-button.primary {
@@ -706,6 +715,7 @@ body {
   z-index: 2000;
   backdrop-filter: blur(6px);
   padding: 2rem;
+  overflow-y: auto;
 }
 
 .modal {
@@ -714,10 +724,13 @@ body {
   border-radius: var(--radius);
   max-width: 1100px;
   width: 100%;
-  max-height: 90vh;
-  overflow-y: auto;
+  max-height: calc(100vh - 4rem);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
   position: relative;
   box-shadow: 0 0 50px rgba(255, 214, 0, 0.3);
+  margin: auto;
 }
 
 .modal-close {
@@ -749,6 +762,8 @@ body {
   grid-template-columns: 1fr 1fr;
   gap: 2rem;
   padding: 2rem;
+  overflow-y: auto;
+  flex: 1;
 }
 
 .modal-image-container {
@@ -864,6 +879,29 @@ body {
 }
 
 /* Responsive Design */
+@media (max-width: 1024px) {
+  .header-content {
+    justify-content: center;
+    text-align: center;
+  }
+  
+  .nav {
+    order: 3;
+    width: 100%;
+    justify-content: center;
+    gap: 1.5rem;
+  }
+  
+  .header-actions {
+    order: 2;
+    justify-content: center;
+  }
+  
+  .cta-button {
+    padding: 0.7rem 1.2rem;
+    font-size: 0.8rem;
+  }
+}
 @media (max-width: 1200px) {
   .menu-grid {
     grid-template-columns: repeat(3, 1fr);
@@ -877,18 +915,14 @@ body {
   
   .header-content {
     flex-direction: column;
-    gap: 1rem;
+    gap: 1.5rem;
     padding: 1rem 0;
+    text-align: center;
   }
   
   .nav {
-    order: 3;
-    width: 100%;
-    justify-content: center;
-  }
-  
-  .header-actions {
-    order: 2;
+    gap: 1rem;
+    flex-wrap: wrap;
   }
   
   .hero-title {
@@ -912,6 +946,7 @@ body {
   .category-filters {
     flex-direction: column;
     align-items: center;
+    gap: 0.8rem;
   }
   
   .about-values {
@@ -936,6 +971,7 @@ body {
   .modal-content {
     grid-template-columns: 1fr;
     padding: 1rem;
+    gap: 1rem;
   }
   
   .modal-actions {
@@ -952,9 +988,35 @@ body {
   .bat-logo {
     font-size: 2rem;
   }
+  
+  .modal {
+    margin: 1rem;
+    max-height: calc(100vh - 2rem);
+  }
+  
+  .modal-overlay {
+    padding: 1rem;
+  }
 }
 
 @media (max-width: 480px) {
+  .header-content {
+    gap: 1rem;
+  }
+  
+  .nav {
+    gap: 0.8rem;
+  }
+  
+  .nav-link {
+    font-size: 0.9rem;
+  }
+  
+  .cta-button {
+    padding: 0.6rem 1rem;
+    font-size: 0.8rem;
+  }
+  
   .menu-grid {
     grid-template-columns: 1fr;
   }
@@ -967,14 +1029,13 @@ body {
     font-size: 1rem;
   }
   
-  .cta-button,
   .hero-cta {
     padding: 0.8rem 1.2rem;
     font-size: 0.8rem;
   }
   
   .modal-overlay {
-    padding: 1rem;
+    padding: 0.5rem;
   }
   
   .modal-title {
@@ -992,6 +1053,16 @@ body {
   
   .bat-logo {
     font-size: 1.5rem;
+  }
+  
+  .modal {
+    margin: 0.5rem;
+    max-height: calc(100vh - 1rem);
+  }
+  
+  .filter-btn {
+    padding: 0.8rem 1.2rem;
+    font-size: 0.8rem;
   }
 }
 
