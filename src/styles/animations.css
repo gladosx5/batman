@@ -1,5 +1,10 @@
 /* Batman Gotham 3D Animation Styles */
 
+/* Container pour toute l'application */
+.gotham-container {
+  position: relative;
+}
+
 :root {
 	--bg: #fff4d1;
 	--w1: conic-gradient(from 90deg at 50% 50%, #fff491 0% 25%, #fff0 0% 100%)
@@ -527,14 +532,12 @@
 
 /* Smooth scrolling */
 html {
-  height: 100vh;
-  overflow: hidden;
+  scroll-behavior: smooth;
 }
 
 /* Prevent horizontal overflow */
 body {
-  overflow: hidden;
-  height: 100vh;
+  overflow-x: hidden;
   margin: 0;
   padding: 0;
 }
