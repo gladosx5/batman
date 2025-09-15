@@ -19,14 +19,11 @@
   min-height: 100vh;
   padding: 0 5%;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  max-width: 100%;
-  overflow-x: hidden;
 }
 
 .hero-content {
   flex: 1;
   max-width: 500px;
-  min-width: 0; /* Permet la compression sur mobile */
 }
 
 .hero-title {
@@ -35,7 +32,6 @@
   color: white;
   margin-bottom: 1rem;
   text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-  word-wrap: break-word;
 }
 
 .hero-subtitle {
@@ -67,7 +63,6 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  min-width: 0;
 }
 
 .hero-image img {
@@ -76,7 +71,6 @@
   height: auto;
   border-radius: 20px;
   box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-  max-width: 100%;
 }
 
 /* Container */
@@ -84,8 +78,6 @@
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 2rem;
-  width: 100%;
-  box-sizing: border-box;
 }
 
 /* Section Title */
@@ -96,7 +88,6 @@
   margin-bottom: 3rem;
   color: white;
   text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-  word-wrap: break-word;
 }
 
 /* Menu Section */
@@ -104,15 +95,12 @@
   padding: 5rem 0;
   background: rgba(255,255,255,0.1);
   backdrop-filter: blur(10px);
-  width: 100%;
-  overflow-x: hidden;
 }
 
 .menu-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 2rem;
-  width: 100%;
 }
 
 .menu-item {
@@ -122,8 +110,6 @@
   text-align: center;
   box-shadow: 0 8px 25px rgba(0,0,0,0.1);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-  max-width: 100%;
-  box-sizing: border-box;
 }
 
 .menu-item:hover {
@@ -162,15 +148,12 @@
 .features-section {
   padding: 5rem 0;
   background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
-  width: 100%;
-  overflow-x: hidden;
 }
 
 .features-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 2rem;
-  width: 100%;
 }
 
 .feature {
@@ -180,8 +163,6 @@
   border-radius: 15px;
   backdrop-filter: blur(10px);
   transition: transform 0.3s ease;
-  max-width: 100%;
-  box-sizing: border-box;
 }
 
 .feature:hover {
@@ -210,7 +191,6 @@
   padding: 2rem 0;
   background: rgba(0,0,0,0.3);
   text-align: center;
-  width: 100%;
 }
 
 .footer p {
@@ -224,7 +204,6 @@
     flex-direction: column;
     text-align: center;
     padding: 2rem;
-    gap: 2rem;
   }
   
   .hero-title {
@@ -238,14 +217,9 @@
   .menu-grid,
   .features-grid {
     grid-template-columns: 1fr;
-    gap: 1rem;
   }
   
   .container {
     padding: 0 1rem;
-  }
-  
-  .menu-item {
-    margin: 0;
   }
 }

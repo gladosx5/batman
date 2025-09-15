@@ -61,7 +61,6 @@ const BatmanLogo = () => {
     // Animation de la scène qui monte (phase 2)
     const updateSceneAnimation = () => {
       const gothamScene = document.querySelector('.gotham-scene');
-      const foodWebsite = document.querySelector('.food-website');
       if (!gothamScene) return;
 
       // Calcul de la progression pour faire monter la scène
@@ -75,27 +74,6 @@ const BatmanLogo = () => {
         duration: 0.4,
         ease: "power2.out"
       });
-
-      // Activer le scroll du site web quand la scène est complètement montée
-      if (sceneProgressNormalized >= 1) {
-        document.body.style.overflow = 'auto';
-        document.body.style.overflowX = 'hidden';
-        document.documentElement.style.overflow = 'auto';
-        document.documentElement.style.overflowX = 'hidden';
-        if (foodWebsite) {
-          (foodWebsite as HTMLElement).style.position = 'static';
-          (foodWebsite as HTMLElement).style.zIndex = '1';
-          (foodWebsite as HTMLElement).style.height = '100vh';
-        }
-      } else {
-        document.body.style.overflow = 'hidden';
-        document.documentElement.style.overflow = 'hidden';
-        if (foodWebsite) {
-          (foodWebsite as HTMLElement).style.position = 'fixed';
-          (foodWebsite as HTMLElement).style.zIndex = '-1';
-          (foodWebsite as HTMLElement).style.height = '100vh';
-        }
-      }
 
       // Animation de disparition du logo seulement si on remonte ET que la scène est revenue en place
       if (sceneProgressNormalized <= 0 && scrollProgress < -200) {
