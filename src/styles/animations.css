@@ -34,7 +34,6 @@
   left: 0;
   background-color: #1f1f1f;
   background-image: linear-gradient(315deg, #0cbaba 0%, #380036 74%);
-  z-index: 1;
 }
 
 /* Sky and Atmosphere */
@@ -527,15 +526,17 @@
 }
 
 /* Smooth scrolling */
-body {
-  overflow-x: hidden;
-  overflow-y: auto;
-  margin: 0;
-  padding: 0;
+html {
+  height: 100vh;
+  overflow: hidden;
 }
 
-html {
-  overflow-x: hidden;
+/* Prevent horizontal overflow */
+body {
+  overflow: hidden;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
 }
 
 /* Scroll Indicator */
