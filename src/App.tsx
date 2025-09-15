@@ -9,7 +9,7 @@ function App() {
   useScrollAnimation();
 
   return (
-    <div className="app">
+    <div className="app" style={{ width: '100%', maxWidth: '100vw', overflowX: 'hidden' }}>
       <GothamScene />
     </div>
   );

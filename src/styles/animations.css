@@ -529,16 +529,17 @@
 
 /* Smooth scrolling */
 html {
-  height: 100vh;
   scroll-behavior: smooth;
+  overflow-x: hidden;
 }
 
 /* Prevent horizontal overflow */
 body {
   overflow-x: hidden;
-  height: 100vh;
   margin: 0;
   padding: 0;
+  width: 100%;
+  max-width: 100vw;
 }
 
 /* Scroll Indicator */

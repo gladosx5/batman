@@ -78,16 +78,23 @@ const BatmanLogo = () => {
 
       // Activer le scroll du site web quand la scène est complètement montée
       if (sceneProgressNormalized >= 1) {
-        document.body.style.overflow = 'auto';
+        document.body.style.overflow = 'visible';
+        document.body.style.overflowX = 'hidden';
+        document.documentElement.style.overflow = 'visible';
+        document.documentElement.style.overflowX = 'hidden';
         if (foodWebsite) {
           (foodWebsite as HTMLElement).style.position = 'static';
           (foodWebsite as HTMLElement).style.zIndex = '1';
+          (foodWebsite as HTMLElement).style.height = 'auto';
+          (foodWebsite as HTMLElement).style.minHeight = '100vh';
         }
       } else {
         document.body.style.overflow = 'hidden';
+        document.documentElement.style.overflow = 'hidden';
         if (foodWebsite) {
           (foodWebsite as HTMLElement).style.position = 'fixed';
           (foodWebsite as HTMLElement).style.zIndex = '-1';
+          (foodWebsite as HTMLElement).style.height = '100vh';
         }
       }
 
