@@ -96,12 +96,12 @@ const BatmanLogo = () => {
       }
 
       // Animation de disparition du logo seulement si on remonte ET que la scène est revenue en place
-      if (sceneProgressNormalized <= 0 && scrollProgress < -200) {
+      if (sceneProgressNormalized <= 0 && scrollProgress < -100) {
         isAnimationComplete = false;
-        const disappearProgress = Math.min(Math.abs(scrollProgress + 200) / 300, 1);
+        const disappearProgress = Math.min(Math.abs(scrollProgress + 100) / 100, 1); // Animation de disparition plus courte
         gsap.to(logo, {
           opacity: 1 - disappearProgress,
-          scale: 4 - (disappearProgress * 3),
+          scale: 4 - (disappearProgress * 2), // Le logo ne rétrécit pas autant
           duration: 0.4,
           ease: "power2.out"
         });
