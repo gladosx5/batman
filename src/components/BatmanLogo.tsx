@@ -31,7 +31,7 @@ const BatmanLogo = () => {
       const yPosition = 250 - (easeProgress * 300); // De 250 à -50
       
       // Scale: grossit modérément
-      const scale = 0.2 + (easeProgress * 1.3); // De 0.2 à 1.5 (beaucoup moins qu'avant)
+      const scale = 0.2 + (easeProgress * 2.8); // De 0.2 à 3.0 (zoom x3)
       
       // Opacité: devient plus visible
       const opacity = 0.6 + (easeProgress * 0.4); // De 0.6 à 1.0
