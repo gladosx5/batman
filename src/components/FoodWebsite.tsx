@@ -4,20 +4,27 @@ import MenuModal from './MenuModal';
 const FoodWebsite = () => {
   const [activeCategory, setActiveCategory] = useState('tous');
   const [selectedDish, setSelectedDish] = useState(null);
+  const [scrollPosition, setScrollPosition] = useState(0);
 
   // Bloquer le scroll quand la modal est ouverte
   useEffect(() => {
     if (selectedDish) {
+      // Sauvegarder la position de scroll actuelle
+      setScrollPosition(window.scrollY);
       document.body.style.overflow = 'hidden';
     } else {
       document.body.style.overflow = 'unset';
+      // Restaurer la position de scroll quand on ferme la modal
+      if (scrollPosition > 0) {
+        window.scrollTo(0, scrollPosition);
+      }
     }
     
     // Cleanup au démontage du composant
     return () => {
       document.body.style.overflow = 'unset';
     };
-  }, [selectedDish]);
+  }, [selectedDish, scrollPosition]);
 
   // Fermer la modal avec Escape
   useEffect(() => {
@@ -147,6 +154,16 @@ const FoodWebsite = () => {
     ? menuData 
     : menuData.filter(item => item.category === activeCategory);
 
+  // Fonction pour ouvrir la modal
+  const openModal = (dish) => {
+    setSelectedDish(dish);
+  };
+
+  // Fonction pour fermer la modal
+  const closeModal = () => {
+    setSelectedDish(null);
+  };
+
   const getBadgeIcon = (badge) => {
     const icons = {
       'poulet': '🐔',
@@ -253,7 +270,7 @@ const FoodWebsite = () => {
               <div 
                 key={dish.id}
                 className="dish-card"
-                onClick={() => setSelectedDish(dish)}
+                onClick={() => openModal(dish)}
               >
                 <div className="dish-image-container">
                   <img src={dish.image} alt={dish.name} className="dish-image" />
@@ -411,7 +428,7 @@ const FoodWebsite = () => {
       {/* Modal Component */}
       <MenuModal 
         selectedDish={selectedDish}
-        onClose={() => setSelectedDish(null)}
+        onClose={closeModal}
         getAllergenIcon={getAllergenIcon}
       />
     </div>

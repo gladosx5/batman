@@ -339,7 +339,7 @@ body {
   border: 1px solid rgba(255, 214, 0, 0.3);
   color: var(--text);
   cursor: pointer;
-  transition: var(--transition);
+  transition: all 0.2s ease;
   border-radius: var(--radius);
   font-family: 'Orbitron', monospace;
   font-weight: 600;
@@ -353,7 +353,7 @@ body {
   border-color: var(--accent);
   color: var(--accent);
   box-shadow: 0 0 20px rgba(255, 214, 0, 0.3);
-  transform: translateY(-2px);
+  transform: none;
 }
 
 .filter-icon {
@@ -373,12 +373,12 @@ body {
   border-radius: var(--radius);
   overflow: hidden;
   cursor: pointer;
-  transition: var(--transition);
+  transition: all 0.2s ease;
   position: relative;
 }
 
 .dish-card:hover {
-  transform: translateY(-6px) scale(1.015);
+  transform: translateY(-3px);
   box-shadow: 0 0 30px rgba(255, 214, 0, 0.12);
   border-color: var(--accent);
 }
@@ -1174,27 +1174,11 @@ a:focus {
   outline-offset: 2px;
 }
 
-/* Loading animation */
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+/* Optimisation des performances */
+.menu-grid {
+  will-change: auto;
 }
 
 .dish-card {
-  animation: fadeInUp 0.6s ease-out;
+  will-change: transform;
 }
-
-.dish-card:nth-child(1) { animation-delay: 0.1s; }
-.dish-card:nth-child(2) { animation-delay: 0.2s; }
-.dish-card:nth-child(3) { animation-delay: 0.3s; }
-.dish-card:nth-child(4) { animation-delay: 0.4s; }
-.dish-card:nth-child(5) { animation-delay: 0.5s; }
-.dish-card:nth-child(6) { animation-delay: 0.6s; }
-.dish-card:nth-child(7) { animation-delay: 0.7s; }
-.dish-card:nth-child(8) { animation-delay: 0.8s; }
