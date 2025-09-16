@@ -9,13 +9,19 @@ const MenuModal = ({ selectedDish, onClose, getAllergenIcon }) => {
       modalRef.current.focus();
       // Bloquer le scroll du body
       document.body.style.overflow = 'hidden';
+      document.body.style.position = 'fixed';
+      document.body.style.width = '100%';
     } else {
       // Restaurer le scroll du body
       document.body.style.overflow = 'unset';
+      document.body.style.position = 'unset';
+      document.body.style.width = 'unset';
     }
 
     return () => {
       document.body.style.overflow = 'unset';
+      document.body.style.position = 'unset';
+      document.body.style.width = 'unset';
     };
   }, [selectedDish]);
 
@@ -36,18 +42,30 @@ const MenuModal = ({ selectedDish, onClose, getAllergenIcon }) => {
   if (!selectedDish) return null;
 
   return (
-    <div 
+    <div
       className="menu-modal-overlay" 
       onClick={handleOverlayClick}
       role="dialog"
       aria-modal="true"
       aria-labelledby="modal-title"
+      style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        zIndex: 9999999
+      }}
     >
       <div 
         className="menu-modal" 
         onClick={(e) => e.stopPropagation()}
         ref={modalRef}
         tabIndex={-1}
+        style={{
+          position: 'relative',
+          zIndex: 10000000
+        }}
       >
         <button 
           className="menu-modal-close" 
