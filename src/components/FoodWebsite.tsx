@@ -5,27 +5,6 @@ import WebsiteHeader from './WebsiteHeader';
 const FoodWebsite = () => {
   const [activeCategory, setActiveCategory] = useState('tous');
   const [selectedDish, setSelectedDish] = useState(null);
-  const [scrollPosition, setScrollPosition] = useState(0);
-
-  // Bloquer le scroll quand la modal est ouverte
-  useEffect(() => {
-    if (selectedDish) {
-      // Sauvegarder la position de scroll actuelle
-      setScrollPosition(window.scrollY);
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'unset';
-      // Restaurer la position de scroll quand on ferme la modal
-      if (scrollPosition > 0) {
-        window.scrollTo(0, scrollPosition);
-      }
-    }
-    
-    // Cleanup au démontage du composant
-    return () => {
-      document.body.style.overflow = 'unset';
-    };
-  }, [selectedDish, scrollPosition]);
 
   // Fermer la modal avec Escape
   useEffect(() => {
@@ -39,7 +18,7 @@ const FoodWebsite = () => {
     return () => document.removeEventListener('keydown', handleEscape);
   }, [selectedDish]);
 
-  // Menu data basé sur tes spécifications
+  // Menu data optimisé
   const menuData = [
     {
       id: "baguette-bane",
@@ -155,12 +134,10 @@ const FoodWebsite = () => {
     ? menuData 
     : menuData.filter(item => item.category === activeCategory);
 
-  // Fonction pour ouvrir la modal
   const openModal = (dish) => {
     setSelectedDish(dish);
   };
 
-  // Fonction pour fermer la modal
   const closeModal = () => {
     setSelectedDish(null);
   };
@@ -189,8 +166,8 @@ const FoodWebsite = () => {
   };
 
   return (
-    <div className="gotham-streat-website">
-      {/* Header fixe pour le site vitrine */}
+    <div className="food-website">
+      {/* Header fixe */}
       <WebsiteHeader />
       
       {/* Hero Section */}

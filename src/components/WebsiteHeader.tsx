@@ -2,16 +2,17 @@ import React, { useState, useEffect } from 'react';
 
 const WebsiteHeader = () => {
   const [activeSection, setActiveSection] = useState('accueil');
+  const [isScrolled, setIsScrolled] = useState(false);
 
   // Observer pour détecter la section active
   useEffect(() => {
     const observerOptions = {
       root: null,
-      rootMargin: '-10% 0px -90% 0px',
+      rootMargin: '-20% 0px -80% 0px',
       threshold: 0.1
     };
 
-    const observerCallback = (entries: IntersectionObserverEntry[]) => {
+    const observerCallback = (entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
           const sectionId = entry.target.id;
@@ -31,8 +32,19 @@ const WebsiteHeader = () => {
     };
   }, []);
 
+  // Détecter le scroll pour l'effet du header
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrolled = window.scrollY > 50;
+      setIsScrolled(scrolled);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   return (
-    <header className="website-header">
+    <header className={`website-header ${isScrolled ? 'scrolled' : ''}`}>
       <div className="website-header-container">
         <div className="website-header-content">
           <div className="website-logo">

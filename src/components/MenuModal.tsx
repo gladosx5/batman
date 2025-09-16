@@ -1,30 +1,33 @@
 import React, { useEffect, useRef } from 'react';
 
-interface MenuModalProps {
-  selectedDish: any;
-  onClose: () => void;
-  getAllergenIcon: (allergen: string) => string;
-}
-
-const MenuModal: React.FC<MenuModalProps> = ({ selectedDish, onClose, getAllergenIcon }) => {
-  const modalRef = useRef<HTMLDivElement>(null);
+const MenuModal = ({ selectedDish, onClose, getAllergenIcon }) => {
+  const modalRef = useRef(null);
 
   // Focus management pour l'accessibilité
   useEffect(() => {
     if (selectedDish && modalRef.current) {
       modalRef.current.focus();
+      // Bloquer le scroll du body
+      document.body.style.overflow = 'hidden';
+    } else {
+      // Restaurer le scroll du body
+      document.body.style.overflow = 'unset';
     }
+
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
   }, [selectedDish]);
 
   // Gestion du clic en dehors de la modal
-  const handleOverlayClick = (e: React.MouseEvent) => {
+  const handleOverlayClick = (e) => {
     if (e.target === e.currentTarget) {
       onClose();
     }
   };
 
   // Gestion du clic sur le bouton fermer
-  const handleCloseClick = (e: React.MouseEvent) => {
+  const handleCloseClick = (e) => {
     e.preventDefault();
     e.stopPropagation();
     onClose();
