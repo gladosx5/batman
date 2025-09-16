@@ -1,6 +1,7 @@
 import React from 'react';
-import GothamPortal from './components/GothamPortal';
+import GothamScene from './components/GothamScene';
 import FoodWebsite from './components/FoodWebsite';
+import Header from './components/Header';
 import { useScrollAnimation } from './hooks/useScrollAnimation';
 import './styles/animations.css';
 import './styles/food-website.css';
@@ -11,10 +12,10 @@ function App() {
 
   return (
     <div className="app">
-      {/* Site web principal */}
+      {/* Site web Gotham Streat */}
       <FoodWebsite />
-      {/* Scène Gotham dans un portail séparé */}
-      <GothamPortal />
+      {/* Scène Gotham avec animation Batman par-dessus */}
+      <GothamScene />
     </div>
   );
 }
