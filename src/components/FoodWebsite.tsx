@@ -5,6 +5,51 @@ const FoodWebsite = () => {
   const [activeCategory, setActiveCategory] = useState('tous');
   const [selectedDish, setSelectedDish] = useState(null);
   const [scrollPosition, setScrollPosition] = useState(0);
+  const [activeSection, setActiveSection] = useState('accueil');
+  const [headerVisible, setHeaderVisible] = useState(false);
+
+  // Observer pour détecter la section active et la visibilité du header
+  useEffect(() => {
+    const observerOptions = {
+      root: null,
+      rootMargin: '-20% 0px -80% 0px',
+      threshold: 0
+    };
+
+    const observerCallback = (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const sectionId = entry.target.id;
+          setActiveSection(sectionId);
+        }
+      });
+    };
+
+    const observer = new IntersectionObserver(observerCallback, observerOptions);
+    
+    // Observer toutes les sections
+    const sections = document.querySelectorAll('section[id]');
+    sections.forEach((section) => observer.observe(section));
+
+    // Observer pour la visibilité du header basé sur l'animation de la ville
+    const checkHeaderVisibility = () => {
+      const gothamScene = document.querySelector('.gotham-scene');
+      if (gothamScene) {
+        const rect = gothamScene.getBoundingClientRect();
+        const sceneProgress = Math.max(0, Math.min(1, -rect.top / window.innerHeight));
+        setHeaderVisible(sceneProgress > 0.1); // Header apparaît quand la ville commence à monter
+      }
+    };
+
+    // Vérifier la visibilité du header à intervalles réguliers
+    const headerInterval = setInterval(checkHeaderVisibility, 100);
+    checkHeaderVisibility(); // Vérification initiale
+
+    return () => {
+      observer.disconnect();
+      clearInterval(headerInterval);
+    };
+  }, []);
 
   // Bloquer le scroll quand la modal est ouverte
   useEffect(() => {
@@ -190,17 +235,17 @@ const FoodWebsite = () => {
   return (
     <div className="gotham-streat-website">
       {/* Header */}
-      <header className="header">
+      <header className={`header ${headerVisible ? 'visible' : ''}`}>
         <div className="container">
           <div className="header-content">
             <div className="logo">
               <span className="logo-text">GOTHAM STREAT</span>
             </div>
             <nav className="nav">
-              <a href="#accueil" className="nav-link">Accueil</a>
-              <a href="#menu" className="nav-link">Menu</a>
-              <a href="#about" className="nav-link">À propos</a>
-              <a href="#infos" className="nav-link">Infos pratiques</a>
+              <a href="#accueil" className={`nav-link ${activeSection === 'accueil' ? 'active' : ''}`}>Accueil</a>
+              <a href="#menu" className={`nav-link ${activeSection === 'menu' ? 'active' : ''}`}>Menu</a>
+              <a href="#about" className={`nav-link ${activeSection === 'about' ? 'active' : ''}`}>À propos</a>
+              <a href="#infos" className={`nav-link ${activeSection === 'infos' ? 'active' : ''}`}>Infos pratiques</a>
             </nav>
             <div className="header-actions">
               <a href="tel:+33123456789" className="cta-button primary">
