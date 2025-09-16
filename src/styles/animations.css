@@ -35,7 +35,7 @@
   background-color: #1f1f1f;
   background-image: linear-gradient(315deg, #0cbaba 0%, #380036 74%);
   will-change: transform; /* Optimisation pour les animations */
-  z-index: 10000; /* Au-dessus du site web */
+  z-index: 1000; /* Au-dessus du site web */
   pointer-events: auto; /* Permettre les interactions pendant l'animation */
 }
 

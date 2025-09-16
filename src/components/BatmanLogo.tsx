@@ -63,7 +63,6 @@ const BatmanLogo = () => {
     // Animation de la scène qui monte (phase 2)
     const updateSceneAnimation = () => {
       const gothamScene = document.querySelector('.gotham-scene');
-      const header = document.querySelector('.header');
       if (!gothamScene) return;
 
       // Calcul de la progression pour faire monter la scène
