@@ -6,7 +6,7 @@ const FoodWebsite = () => {
   const [selectedDish, setSelectedDish] = useState(null);
   const [scrollPosition, setScrollPosition] = useState(0);
   const [activeSection, setActiveSection] = useState('accueil');
-  const [isGothamVisible, setIsGothamVisible] = useState(true);
+  const [showHeader, setShowHeader] = useState(false);
 
   // Observer pour détecter la section active
   useEffect(() => {
@@ -36,23 +36,21 @@ const FoodWebsite = () => {
     };
   }, []);
 
-  // Observer pour détecter si Gotham est visible
+  // Observer pour détecter quand montrer le header
   useEffect(() => {
-    const checkGothamVisibility = () => {
-      const gothamScene = document.querySelector('.gotham-scene');
-      if (gothamScene) {
-        const computedStyle = window.getComputedStyle(gothamScene);
-        const opacity = parseFloat(computedStyle.opacity);
-        setIsGothamVisible(opacity > 0.1);
-      }
+    const handleScroll = () => {
+      // Montrer le header dès qu'on commence à scroller ou qu'on n'est plus en haut
+      const scrollY = window.scrollY;
+      const shouldShowHeader = scrollY > 50; // Montrer après 50px de scroll
+      setShowHeader(shouldShowHeader);
     };
 
-    // Vérifier la visibilité de Gotham à intervalles réguliers
-    const gothamInterval = setInterval(checkGothamVisibility, 100);
-    checkGothamVisibility(); // Vérification initiale
+    // Écouter le scroll
+    window.addEventListener('scroll', handleScroll);
+    handleScroll(); // Vérification initiale
 
     return () => {
-      clearInterval(gothamInterval);
+      window.removeEventListener('scroll', handleScroll);
     };
   }, []);
 
@@ -240,7 +238,7 @@ const FoodWebsite = () => {
   return (
     <div className="gotham-streat-website">
       {/* Header */}
-      <header className={`header ${!isGothamVisible ? 'header-visible' : 'header-hidden'}`}>
+      <header className={`header ${showHeader ? 'header-visible' : 'header-hidden'}`}>
         <div className="container">
           <div className="header-content">
             <div className="logo">
