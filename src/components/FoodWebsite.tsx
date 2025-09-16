@@ -7,6 +7,7 @@ const FoodWebsite = () => {
   const [scrollPosition, setScrollPosition] = useState(0);
   const [activeSection, setActiveSection] = useState('accueil');
   const [headerVisible, setHeaderVisible] = useState(false);
+  const [headerOpacity, setHeaderOpacity] = useState(0);
 
   // Observer pour détecter la section active et la visibilité du header
   useEffect(() => {
@@ -37,7 +38,20 @@ const FoodWebsite = () => {
       if (gothamScene) {
         const rect = gothamScene.getBoundingClientRect();
         const sceneProgress = Math.max(0, Math.min(1, -rect.top / window.innerHeight));
-        setHeaderVisible(sceneProgress > 0.1); // Header apparaît quand la ville commence à monter
+        
+        // Header commence à apparaître quand la scène est à 70% de sa montée
+        const headerStartProgress = 0.7;
+        const headerFullProgress = 0.9;
+        
+        if (sceneProgress >= headerStartProgress) {
+          setHeaderVisible(true);
+          // Calcul de l'opacité progressive
+          const opacityProgress = Math.min(1, (sceneProgress - headerStartProgress) / (headerFullProgress - headerStartProgress));
+          setHeaderOpacity(opacityProgress);
+        } else {
+          setHeaderVisible(false);
+          setHeaderOpacity(0);
+        }
       }
     };
 
@@ -235,17 +249,22 @@ const FoodWebsite = () => {
   return (
     <div className="gotham-streat-website">
       {/* Header */}
-      <header className={`header ${headerVisible ? 'visible' : ''}`}>
+      <header 
+        className={`header ${headerVisible ? 'visible' : ''}`}
+        style={{ opacity: headerOpacity }}
+      >
         <div className="container">
           <div className="header-content">
             <div className="logo">
-              <span className="logo-text">GOTHAM STREAT</span>
+              <span className={`logo-text ${activeSection === 'menu' ? 'glow-active' : ''}`}>
+                GOTHAM STREAT
+              </span>
             </div>
             <nav className="nav">
-              <a href="#accueil" className={`nav-link ${activeSection === 'accueil' ? 'active' : ''}`}>Accueil</a>
-              <a href="#menu" className={`nav-link ${activeSection === 'menu' ? 'active' : ''}`}>Menu</a>
-              <a href="#about" className={`nav-link ${activeSection === 'about' ? 'active' : ''}`}>À propos</a>
-              <a href="#infos" className={`nav-link ${activeSection === 'infos' ? 'active' : ''}`}>Infos pratiques</a>
+              <a href="#accueil" className={`nav-link ${activeSection === 'accueil' ? 'active glow-active' : ''}`}>Accueil</a>
+              <a href="#menu" className={`nav-link ${activeSection === 'menu' ? 'active glow-active' : ''}`}>Menu</a>
+              <a href="#about" className={`nav-link ${activeSection === 'about' ? 'active glow-active' : ''}`}>À propos</a>
+              <a href="#infos" className={`nav-link ${activeSection === 'infos' ? 'active glow-active' : ''}`}>Infos pratiques</a>
             </nav>
             <div className="header-actions">
               <a href="tel:+33123456789" className="cta-button primary">
