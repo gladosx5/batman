@@ -6,15 +6,14 @@ const FoodWebsite = () => {
   const [selectedDish, setSelectedDish] = useState(null);
   const [scrollPosition, setScrollPosition] = useState(0);
   const [activeSection, setActiveSection] = useState('accueil');
-  const [headerVisible, setHeaderVisible] = useState(false);
-  const [headerOpacity, setHeaderOpacity] = useState(0);
+  const [isGothamVisible, setIsGothamVisible] = useState(true);
 
-  // Observer pour détecter la section active et la visibilité du header
+  // Observer pour détecter la section active
   useEffect(() => {
     const observerOptions = {
       root: null,
-      rootMargin: '-20% 0px -80% 0px',
-      threshold: 0
+      rootMargin: '-10% 0px -90% 0px',
+      threshold: 0.1
     };
 
     const observerCallback = (entries) => {
@@ -32,36 +31,28 @@ const FoodWebsite = () => {
     const sections = document.querySelectorAll('section[id]');
     sections.forEach((section) => observer.observe(section));
 
-    // Observer pour la visibilité du header basé sur l'animation de la ville
-    const checkHeaderVisibility = () => {
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
+
+  // Observer pour détecter si Gotham est visible
+  useEffect(() => {
+    const checkGothamVisibility = () => {
       const gothamScene = document.querySelector('.gotham-scene');
       if (gothamScene) {
-        const rect = gothamScene.getBoundingClientRect();
-        const sceneProgress = Math.max(0, Math.min(1, -rect.top / window.innerHeight));
-        
-        // Header commence à apparaître quand la scène est à 70% de sa montée
-        const headerStartProgress = 0.7;
-        const headerFullProgress = 0.9;
-        
-        if (sceneProgress >= headerStartProgress) {
-          setHeaderVisible(true);
-          // Calcul de l'opacité progressive
-          const opacityProgress = Math.min(1, (sceneProgress - headerStartProgress) / (headerFullProgress - headerStartProgress));
-          setHeaderOpacity(opacityProgress);
-        } else {
-          setHeaderVisible(false);
-          setHeaderOpacity(0);
-        }
+        const computedStyle = window.getComputedStyle(gothamScene);
+        const opacity = parseFloat(computedStyle.opacity);
+        setIsGothamVisible(opacity > 0.1);
       }
     };
 
-    // Vérifier la visibilité du header à intervalles réguliers
-    const headerInterval = setInterval(checkHeaderVisibility, 100);
-    checkHeaderVisibility(); // Vérification initiale
+    // Vérifier la visibilité de Gotham à intervalles réguliers
+    const gothamInterval = setInterval(checkGothamVisibility, 100);
+    checkGothamVisibility(); // Vérification initiale
 
     return () => {
-      observer.disconnect();
-      clearInterval(headerInterval);
+      clearInterval(gothamInterval);
     };
   }, []);
 
@@ -249,22 +240,27 @@ const FoodWebsite = () => {
   return (
     <div className="gotham-streat-website">
       {/* Header */}
-      <header 
-        className={`header ${headerVisible ? 'visible' : ''}`}
-        style={{ opacity: headerOpacity }}
-      >
+      <header className={`header ${!isGothamVisible ? 'header-visible' : 'header-hidden'}`}>
         <div className="container">
           <div className="header-content">
             <div className="logo">
-              <span className={`logo-text ${activeSection === 'menu' ? 'glow-active' : ''}`}>
+              <span className="logo-text">
                 GOTHAM STREAT
               </span>
             </div>
             <nav className="nav">
-              <a href="#accueil" className={`nav-link ${activeSection === 'accueil' ? 'active glow-active' : ''}`}>Accueil</a>
-              <a href="#menu" className={`nav-link ${activeSection === 'menu' ? 'active glow-active' : ''}`}>Menu</a>
-              <a href="#about" className={`nav-link ${activeSection === 'about' ? 'active glow-active' : ''}`}>À propos</a>
-              <a href="#infos" className={`nav-link ${activeSection === 'infos' ? 'active glow-active' : ''}`}>Infos pratiques</a>
+              <a href="#accueil" className={`nav-link ${activeSection === 'accueil' ? 'active' : ''}`}>
+                Accueil
+              </a>
+              <a href="#menu" className={`nav-link ${activeSection === 'menu' ? 'active' : ''}`}>
+                Menu
+              </a>
+              <a href="#about" className={`nav-link ${activeSection === 'about' ? 'active' : ''}`}>
+                À propos
+              </a>
+              <a href="#infos" className={`nav-link ${activeSection === 'infos' ? 'active' : ''}`}>
+                Infos pratiques
+              </a>
             </nav>
             <div className="header-actions">
               <a href="tel:+33123456789" className="cta-button primary">
