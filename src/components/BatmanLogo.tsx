@@ -43,7 +43,7 @@ const BatmanLogo = () => {
       const opacity = 0.6 + (moveProgress * 0.4); // De 0.6 à 1.0
       
       // Z-index: passe au premier plan progressivement
-      const zIndex = progress > 0.4 ? 100 : 2;
+      const zIndex = progress > 0.4 ? 50000 : 2;
       
       // Effet de glow qui s'intensifie
       const glowIntensity = zoomProgress * 40;
