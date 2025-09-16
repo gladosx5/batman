@@ -51,9 +51,9 @@ body {
   border-bottom: 1px solid rgba(255, 214, 0, 0.2);
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   pointer-events: auto;
-  transform: translateY(-100%); /* Caché par défaut */
-  opacity: 0; /* Invisible par défaut */
-  visibility: hidden; /* Pas d'interaction par défaut */
+  transform: translateY(0); /* Toujours visible */
+  opacity: 1; /* Toujours opaque */
+  visibility: visible; /* Toujours interactif */
 }
 
 .header.header-visible {
@@ -62,11 +62,6 @@ body {
   visibility: visible; /* Interactions activées */
 }
 
-.header.header-hidden {
-  transform: translateY(-100%); /* Caché en haut */
-  opacity: 0; /* Invisible */
-  visibility: hidden; /* Pas d'interaction */
-}
 
 .header-content {
   display: flex;

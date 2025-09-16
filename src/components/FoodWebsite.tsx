@@ -6,7 +6,6 @@ const FoodWebsite = () => {
   const [selectedDish, setSelectedDish] = useState(null);
   const [scrollPosition, setScrollPosition] = useState(0);
   const [activeSection, setActiveSection] = useState('accueil');
-  const [showHeader, setShowHeader] = useState(false);
 
   // Observer pour détecter la section active
   useEffect(() => {
@@ -33,24 +32,6 @@ const FoodWebsite = () => {
 
     return () => {
       observer.disconnect();
-    };
-  }, []);
-
-  // Observer pour détecter quand montrer le header
-  useEffect(() => {
-    const handleScroll = () => {
-      // Montrer le header dès qu'on commence à scroller ou qu'on n'est plus en haut
-      const scrollY = window.scrollY;
-      const shouldShowHeader = scrollY > 50; // Montrer après 50px de scroll
-      setShowHeader(shouldShowHeader);
-    };
-
-    // Écouter le scroll
-    window.addEventListener('scroll', handleScroll);
-    handleScroll(); // Vérification initiale
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
     };
   }, []);
 
@@ -238,7 +219,7 @@ const FoodWebsite = () => {
   return (
     <div className="gotham-streat-website">
       {/* Header */}
-      <header className={`header ${showHeader ? 'header-visible' : 'header-hidden'}`}>
+      <header className="header header-visible">
         <div className="container">
           <div className="header-content">
             <div className="logo">
