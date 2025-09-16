@@ -750,6 +750,16 @@ body {
 }
 
 /* Menu Modal optimisée et centrée */
+#modal-portal {
+  position: relative;
+  z-index: 999999;
+}
+
+#gotham-portal {
+  position: relative;
+  z-index: 10000;
+}
+
 .menu-modal-overlay {
   position: fixed;
   top: 0;
@@ -760,7 +770,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 9999999;
+  z-index: 1000000;
   backdrop-filter: blur(6px);
   padding: 1rem;
   animation: fadeIn 0.3s ease-out;
