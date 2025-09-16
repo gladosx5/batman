@@ -35,14 +35,7 @@
   background-color: #1f1f1f;
   background-image: linear-gradient(315deg, #0cbaba 0%, #380036 74%);
   will-change: transform; /* Optimisation pour les animations */
-  z-index: 10000; /* En dessous du header */
-  pointer-events: auto; /* Permettre les interactions pendant l'animation */
-}
-
-/* Quand l'animation est terminée, désactiver les interactions sur la scène */
-.gotham-scene.animation-complete {
-  pointer-events: none;
-  z-index: -1; /* Passer derrière le site web */
+  z-index: 10; /* Au-dessus du site web */
 }
 
 /* Sky and Atmosphere */
@@ -534,17 +527,18 @@
   -webkit-backface-visibility: hidden;
 }
 
+/* Smooth scrolling */
 html {
-  scroll-behavior: smooth;
-  overflow-x: hidden;
+  height: 100vh;
+  overflow: hidden;
 }
 
+/* Prevent horizontal overflow */
 body {
-  overflow-x: hidden;
+  overflow: hidden;
+  height: 100vh;
   margin: 0;
   padding: 0;
-  width: 100%;
-  max-width: 100vw;
 }
 
 /* Scroll Indicator */
@@ -553,7 +547,7 @@ body {
   bottom: 80px; /* Plus haut sur mobile */
   left: 50%;
   transform: translateX(-50%);
-  z-index: 1500;
+  z-index: 15;
   display: flex;
   flex-direction: column;
   align-items: center;
