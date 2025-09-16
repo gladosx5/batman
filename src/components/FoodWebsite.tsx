@@ -219,7 +219,7 @@ const FoodWebsite = () => {
   return (
     <div className="gotham-streat-website">
       {/* Header */}
-      <header className="header header-visible">
+      <header className="header">
         <div className="container">
           <div className="header-content">
             <div className="logo">

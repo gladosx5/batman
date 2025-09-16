@@ -25,12 +25,16 @@ body {
   background: var(--bg);
   color: var(--text);
   line-height: 1.6;
+  margin: 0;
+  padding: 0;
 }
 
 .gotham-streat-website {
   min-height: 100vh;
   background: var(--bg);
   position: relative;
+  width: 100%;
+  overflow-x: hidden;
 }
 
 .container {
@@ -45,21 +49,17 @@ body {
   top: 0;
   left: 0;
   right: 0;
-  z-index: 15000; /* Au-dessus de tout sauf les modals */
+  z-index: 15000;
   background: rgba(10, 10, 10, 0.9);
   backdrop-filter: blur(10px);
   border-bottom: 1px solid rgba(255, 214, 0, 0.2);
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: none;
   pointer-events: auto;
-  transform: translateY(0); /* Toujours visible */
-  opacity: 1; /* Toujours opaque */
-  visibility: visible; /* Toujours interactif */
-}
-
-.header.header-visible {
-  transform: translateY(0); /* Visible en haut */
-  opacity: 1; /* Complètement opaque */
-  visibility: visible; /* Interactions activées */
+  transform: translateY(0);
+  opacity: 1;
+  visibility: visible;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 
@@ -213,6 +213,8 @@ body {
   align-items: center;
   justify-content: center;
   overflow: hidden;
+  margin-top: 0;
+  padding-top: 80px; /* Espace pour le header fixe */
 }
 
 .hero-bg {
@@ -383,6 +385,7 @@ body {
   padding: 6rem 0;
   background: var(--bg);
   position: relative;
+  scroll-margin-top: 80px; /* Compensation pour le header fixe */
 }
 
 .section-title {
@@ -539,6 +542,7 @@ body {
   padding: 6rem 0;
   background: var(--panel);
   position: relative;
+  scroll-margin-top: 80px; /* Compensation pour le header fixe */
 }
 
 .about-content {
@@ -593,6 +597,7 @@ body {
 .infos-section {
   padding: 6rem 0;
   background: var(--bg);
+  scroll-margin-top: 80px; /* Compensation pour le header fixe */
 }
 
 .infos-grid {
