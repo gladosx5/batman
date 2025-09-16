@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import MenuModal from './MenuModal';
 
 const FoodWebsite = () => {
   const [activeCategory, setActiveCategory] = useState('tous');
@@ -17,6 +18,19 @@ const FoodWebsite = () => {
       document.body.style.overflow = 'unset';
     };
   }, [selectedDish]);
+
+  // Fermer la modal avec Escape
+  useEffect(() => {
+    const handleEscape = (e) => {
+      if (e.key === 'Escape' && selectedDish) {
+        setSelectedDish(null);
+      }
+    };
+
+    document.addEventListener('keydown', handleEscape);
+    return () => document.removeEventListener('keydown', handleEscape);
+  }, [selectedDish]);
+
   // Menu data basé sur tes spécifications
   const menuData = [
     {
@@ -394,70 +408,12 @@ const FoodWebsite = () => {
         </div>
       </footer>
 
-      {/* Modal */}
-      {selectedDish && (
-        <div 
-          className="modal-overlay" 
-          onClick={() => setSelectedDish(null)}
-        >
-          <div className="modal" onClick={(e) => e.stopPropagation()}>
-            <button 
-              className="modal-close" 
-              onClick={() => setSelectedDish(null)}
-              aria-label="Fermer"
-            >
-              ✕
-            </button>
-            <div className="modal-content">
-              <div className="modal-image-container">
-                <img 
-                  src={selectedDish.image} 
-                  alt={selectedDish.name} 
-                  className="modal-image"
-                />
-              </div>
-              <div className="modal-info">
-                <h2 className="modal-title">{selectedDish.name}</h2>
-                <p className="modal-desc">{selectedDish.desc}</p>
-                
-                <div className="modal-details">
-                  <h4>Composition :</h4>
-                  <p>{selectedDish.ingredients}</p>
-                </div>
-                
-                {selectedDish.allergens && selectedDish.allergens.length > 0 && (
-                  <div className="modal-allergens">
-                    <h4>Allergènes :</h4>
-                    <div className="allergen-list">
-                      {selectedDish.allergens.map((allergen, index) => (
-                        <span key={index} className="allergen-badge">
-                          {getAllergenIcon(allergen)} {allergen}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                )}
-                
-                <div className="modal-price">{selectedDish.price}</div>
-                
-                <div className="modal-actions">
-                  <a href="tel:+33123456789" className="modal-cta primary">
-                    📞 Réserver par téléphone
-                  </a>
-                  <a 
-                    href="https://www.google.com/maps/dir//Gotham+Streat,+Rue+de+la+République,+Gaillac/@43.9028043,1.8975780,17z" 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="modal-cta secondary"
-                  >
-                    Itinéraire
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Modal Component */}
+      <MenuModal 
+        selectedDish={selectedDish}
+        onClose={() => setSelectedDish(null)}
+        getAllergenIcon={getAllergenIcon}
+      />
     </div>
   );
 };
