@@ -49,17 +49,24 @@ body {
   top: 0;
   left: 0;
   right: 0;
-  z-index: 15000;
-  background: rgba(10, 10, 10, 0.9);
+  z-index: 99999;
+  background: rgba(10, 10, 10, 0.95);
   backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   border-bottom: 1px solid rgba(255, 214, 0, 0.2);
-  transition: none;
+  transition: all 0.3s ease;
   pointer-events: auto;
-  transform: translateY(0);
+  transform: translateY(0) translateZ(0);
   opacity: 1;
   visibility: visible;
   width: 100%;
   box-sizing: border-box;
+  will-change: transform;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  min-height: 70px;
+  display: flex;
+  align-items: center;
 }
 
 
@@ -67,14 +74,19 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1rem 0;
+  padding: 0.8rem 0;
   flex-wrap: wrap;
   gap: 1rem;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
 }
 
 .logo-text {
   font-family: 'Bebas Neue', cursive;
-  font-size: 1.8rem;
+  font-size: 2rem;
   color: var(--accent);
   text-shadow: 
     0 0 10px rgba(255, 214, 0, 0.5),
@@ -84,6 +96,10 @@ body {
   flex-shrink: 0;
   transition: all 0.3s ease;
   animation: logo-glow 3s ease-in-out infinite alternate;
+  position: relative;
+  z-index: 2;
+  user-select: none;
+  cursor: pointer;
 }
 
 @keyframes logo-glow {
@@ -106,6 +122,8 @@ body {
   gap: 2rem;
   flex-wrap: wrap;
   justify-content: center;
+  position: relative;
+  z-index: 2;
 }
 
 .nav-link {
@@ -120,6 +138,9 @@ body {
   text-transform: uppercase;
   letter-spacing: 1px;
   font-size: 0.9rem;
+  z-index: 1;
+  white-space: nowrap;
+  user-select: none;
 }
 
 .nav-link:hover {
@@ -161,6 +182,8 @@ body {
   gap: 1rem;
   flex-wrap: wrap;
   flex-shrink: 0;
+  position: relative;
+  z-index: 2;
 }
 
 .cta-button {
@@ -177,6 +200,10 @@ body {
   white-space: nowrap;
   min-width: fit-content;
   font-family: 'Orbitron', monospace;
+  position: relative;
+  z-index: 1;
+  user-select: none;
+  cursor: pointer;
 }
 
 .cta-button.primary {
@@ -214,7 +241,7 @@ body {
   justify-content: center;
   overflow: hidden;
   margin-top: 0;
-  padding-top: 80px; /* Espace pour le header fixe */
+  padding-top: 90px; /* Espace pour le header fixe plus grand */
 }
 
 .hero-bg {
@@ -385,7 +412,7 @@ body {
   padding: 6rem 0;
   background: var(--bg);
   position: relative;
-  scroll-margin-top: 80px; /* Compensation pour le header fixe */
+  scroll-margin-top: 90px; /* Compensation pour le header fixe */
 }
 
 .section-title {
@@ -542,7 +569,7 @@ body {
   padding: 6rem 0;
   background: var(--panel);
   position: relative;
-  scroll-margin-top: 80px; /* Compensation pour le header fixe */
+  scroll-margin-top: 90px; /* Compensation pour le header fixe */
 }
 
 .about-content {
@@ -597,7 +624,7 @@ body {
 .infos-section {
   padding: 6rem 0;
   background: var(--bg);
-  scroll-margin-top: 80px; /* Compensation pour le header fixe */
+  scroll-margin-top: 90px; /* Compensation pour le header fixe */
 }
 
 .infos-grid {
@@ -791,7 +818,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 50000;
+  z-index: 98000;
   backdrop-filter: blur(6px);
   padding: 2rem;
   animation: fadeIn 0.3s ease-out;
@@ -842,7 +869,7 @@ body {
   color: var(--text);
   font-size: 2rem;
   cursor: pointer;
-  z-index: 51;
+  z-index: 98001;
   transition: var(--transition);
   width: 40px;
   height: 40px;
@@ -1049,6 +1076,11 @@ body {
     text-align: center;
     flex-direction: column;
     gap: 1.5rem;
+    padding: 0.6rem 0;
+  }
+  
+  .header {
+    min-height: 80px;
   }
   
   .nav {
@@ -1072,6 +1104,16 @@ body {
     padding: 0.4rem 0.8rem;
   }
   
+  .hero {
+    padding-top: 100px;
+  }
+  
+  .menu-section,
+  .about-section,
+  .infos-section {
+    scroll-margin-top: 100px;
+  }
+  
   .menu-modal {
     max-height: 90vh;
   }
@@ -1091,9 +1133,13 @@ body {
     padding: 0 1rem;
   }
   
+  .header {
+    min-height: 75px;
+  }
+  
   .header-content {
     gap: 1.5rem;
-    padding: 1rem 0;
+    padding: 0.5rem 0;
     text-align: center;
   }
   
@@ -1109,6 +1155,16 @@ body {
   
   .logo-text {
     font-size: 1.6rem;
+  }
+  
+  .hero {
+    padding-top: 95px;
+  }
+  
+  .menu-section,
+  .about-section,
+  .infos-section {
+    scroll-margin-top: 95px;
   }
   
   .hero-title {
@@ -1212,9 +1268,13 @@ body {
 }
 
 @media (max-width: 480px) {
+  .header {
+    min-height: 70px;
+  }
+  
   .header-content {
     gap: 1rem;
-    padding: 0.8rem 0;
+    padding: 0.4rem 0;
   }
   
   .nav {
@@ -1233,6 +1293,16 @@ body {
   .cta-button {
     padding: 0.6rem 1rem;
     font-size: 0.7rem;
+  }
+  
+  .hero {
+    padding-top: 90px;
+  }
+  
+  .menu-section,
+  .about-section,
+  .infos-section {
+    scroll-margin-top: 90px;
   }
   
   .menu-grid {
@@ -1316,6 +1386,22 @@ button:focus,
 a:focus {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
+}
+
+/* Header toujours visible - règles importantes */
+.header {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  z-index: 99999 !important;
+  transform: translateZ(0) !important;
+}
+
+/* Assurer que le header reste au-dessus de tout */
+.header * {
+  position: relative;
+  z-index: 1;
 }
 
 /* Optimisation des performances */
