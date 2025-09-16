@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import MenuModal from './MenuModal';
+import WebsiteHeader from './WebsiteHeader';
 
 const FoodWebsite = () => {
   const [activeCategory, setActiveCategory] = useState('tous');
@@ -189,6 +190,9 @@ const FoodWebsite = () => {
 
   return (
     <div className="gotham-streat-website">
+      {/* Header fixe pour le site vitrine */}
+      <WebsiteHeader />
+      
       {/* Hero Section */}
       <section id="accueil" className="hero">
         <div className="hero-bg">

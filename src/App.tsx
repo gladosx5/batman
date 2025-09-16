@@ -12,9 +12,6 @@ function App() {
 
   return (
     <div className="app">
-      {/* Header - Premier élément généré pour être toujours visible */}
-      <Header />
-
       {/* Site web Gotham Streat */}
       <FoodWebsite />
       {/* Scène Gotham avec animation Batman par-dessus */}
