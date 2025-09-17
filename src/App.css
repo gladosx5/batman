@@ -44,19 +44,11 @@ body {
   top: 0;
   left: 0;
   right: 0;
-  z-index: 15000;
-  background: rgba(10, 10, 10, 0.9);
+  z-index: 1000;
+  background: rgba(10, 10, 10, 0.95);
   backdrop-filter: blur(10px);
   border-bottom: 1px solid rgba(255, 214, 0, 0.2);
   transition: var(--transition);
-  opacity: 0;
-  transform: translateY(-100%);
-  will-change: transform, opacity;
-}
-
-.header.visible {
-  opacity: 1;
-  transform: translateY(0);
 }
 
 .header-content {
@@ -736,7 +728,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 50000;
+  z-index: 2000;
   backdrop-filter: blur(6px);
   padding: 2rem;
   animation: fadeIn 0.3s ease-out;
@@ -1019,6 +1011,7 @@ body {
     max-height: 400px;
   }
 }
+
 @media (max-width: 1200px) {
   .menu-grid {
     grid-template-columns: repeat(3, 1fr);
