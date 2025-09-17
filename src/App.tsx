@@ -12,31 +12,31 @@ const App = () => {
     
     const observerOptions = {
       root: null,
-      rootMargin: '-20% 0px -60% 0px',
+      rootMargin: '-10% 0px -10% 0px',
       threshold: [0, 0.25, 0.5, 0.75, 1]
     };
 
     const observerCallback = (entries) => {
       if (isUpdating) return;
       
-      // Trouver la section la plus visible
-      let mostVisible = null;
-      let maxRatio = 0;
+      // Logique spéciale pour détecter correctement toutes les sections
+      const visibleSections = entries
+        .filter(entry => entry.isIntersecting && entry.intersectionRatio > 0.1)
+        .sort((a, b) => {
+          // Priorité : ratio d'intersection puis position
+          if (Math.abs(a.intersectionRatio - b.intersectionRatio) < 0.1) {
+            return a.target.offsetTop - b.target.offsetTop;
+          }
+          return b.intersectionRatio - a.intersectionRatio;
+        });
       
-      entries.forEach((entry) => {
-        if (entry.isIntersecting && entry.intersectionRatio > maxRatio) {
-          maxRatio = entry.intersectionRatio;
-          mostVisible = entry.target.id;
-        }
-      });
-      
-      // Seulement changer si on a une section clairement visible
-      if (mostVisible && maxRatio > 0.3) {
+      if (visibleSections.length > 0) {
+        const newSection = visibleSections[0].target.id;
         isUpdating = true;
-        setActiveSection(mostVisible);
+        setActiveSection(newSection);
         setTimeout(() => {
           isUpdating = false;
-        }, 100);
+        }, 50);
       }
     };
 
@@ -52,9 +52,22 @@ const App = () => {
       const scrollY = window.scrollY;
       
       // Force accueil si tout en haut
-      if (scrollY < 50) {
+      if (scrollY < 100) {
         setActiveSection('accueil');
         return;
+      }
+      
+      // Détection manuelle pour la section Menu si l'observer rate
+      const menuSection = document.getElementById('menu');
+      if (menuSection) {
+        const rect = menuSection.getBoundingClientRect();
+        const windowHeight = window.innerHeight;
+        
+        // Si la section Menu est visible dans la fenêtre
+        if (rect.top < windowHeight * 0.6 && rect.bottom > windowHeight * 0.4) {
+          setActiveSection('menu');
+          return;
+        }
       }
       
       // Force infos si tout en bas
@@ -64,7 +77,7 @@ const App = () => {
       }
     };
     
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     
     // Initialiser à l'accueil
     setActiveSection('accueil');
