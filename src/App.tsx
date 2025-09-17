@@ -6,21 +6,59 @@ const App = () => {
   const [selectedDish, setSelectedDish] = useState(null);
   const [activeSection, setActiveSection] = useState('accueil');
 
-  // Observer pour détecter la section active
+  // Observer pour détecter la section active avec meilleure détection
   useEffect(() => {
+    // Fonction pour déterminer la section active basée sur la position de scroll
+    const updateActiveSection = () => {
+      const sections = ['accueil', 'menu', 'about', 'infos'];
+      const scrollPosition = window.scrollY + 100; // Offset pour une meilleure détection
+      
+      for (let i = sections.length - 1; i >= 0; i--) {
+        const section = document.getElementById(sections[i]);
+        if (section && section.offsetTop <= scrollPosition) {
+          setActiveSection(sections[i]);
+          return;
+        }
+      }
+      
+      // Si on est tout en haut, forcer l'accueil
+      if (window.scrollY < 100) {
+        setActiveSection('accueil');
+      }
+    };
+
     const observerOptions = {
       root: null,
-      rootMargin: '-20% 0px -80% 0px',
-      threshold: 0
+      rootMargin: '-10% 0px -70% 0px',
+      threshold: [0, 0.1, 0.5, 1]
     };
 
     const observerCallback = (entries) => {
+      let visibleSections = [];
+      
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
-          const sectionId = entry.target.id;
-          setActiveSection(sectionId);
+          visibleSections.push({
+            id: entry.target.id,
+            ratio: entry.intersectionRatio,
+            top: entry.boundingClientRect.top
+          });
         }
       });
+      
+      // Prendre la section la plus visible ou la plus haute si plusieurs sont visibles
+      if (visibleSections.length > 0) {
+        visibleSections.sort((a, b) => {
+          // Priorité à la section avec le plus grand ratio d'intersection
+          if (Math.abs(a.ratio - b.ratio) > 0.1) {
+            return b.ratio - a.ratio;
+          }
+          // Si ratios similaires, prendre celle qui est le plus en haut
+          return a.top - b.top;
+        });
+        
+        setActiveSection(visibleSections[0].id);
+      }
     };
 
     const observer = new IntersectionObserver(observerCallback, observerOptions);
@@ -28,7 +66,20 @@ const App = () => {
     const sections = document.querySelectorAll('section[id]');
     sections.forEach((section) => observer.observe(section));
 
-    return () => observer.disconnect();
+    // Ajouter aussi un listener de scroll pour une détection plus précise
+    const handleScroll = () => {
+      updateActiveSection();
+    };
+    
+    window.addEventListener('scroll', handleScroll);
+    
+    // Initialiser la section active au chargement
+    updateActiveSection();
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener('scroll', handleScroll);
+    };
   }, []);
 
   // Bloquer le scroll quand la modal est ouverte
