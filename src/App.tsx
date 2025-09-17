@@ -8,56 +8,35 @@ const App = () => {
 
   // Observer pour détecter la section active avec meilleure détection
   useEffect(() => {
-    // Fonction pour déterminer la section active basée sur la position de scroll
-    const updateActiveSection = () => {
-      const sections = ['accueil', 'menu', 'about', 'infos'];
-      const scrollPosition = window.scrollY + 100; // Offset pour une meilleure détection
-      
-      for (let i = sections.length - 1; i >= 0; i--) {
-        const section = document.getElementById(sections[i]);
-        if (section && section.offsetTop <= scrollPosition) {
-          setActiveSection(sections[i]);
-          return;
-        }
-      }
-      
-      // Si on est tout en haut, forcer l'accueil
-      if (window.scrollY < 100) {
-        setActiveSection('accueil');
-      }
-    };
-
+    let isUpdating = false;
+    
     const observerOptions = {
       root: null,
-      rootMargin: '-10% 0px -70% 0px',
-      threshold: [0, 0.1, 0.5, 1]
+      rootMargin: '-20% 0px -60% 0px',
+      threshold: [0, 0.25, 0.5, 0.75, 1]
     };
 
     const observerCallback = (entries) => {
-      let visibleSections = [];
+      if (isUpdating) return;
+      
+      // Trouver la section la plus visible
+      let mostVisible = null;
+      let maxRatio = 0;
       
       entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          visibleSections.push({
-            id: entry.target.id,
-            ratio: entry.intersectionRatio,
-            top: entry.boundingClientRect.top
-          });
+        if (entry.isIntersecting && entry.intersectionRatio > maxRatio) {
+          maxRatio = entry.intersectionRatio;
+          mostVisible = entry.target.id;
         }
       });
       
-      // Prendre la section la plus visible ou la plus haute si plusieurs sont visibles
-      if (visibleSections.length > 0) {
-        visibleSections.sort((a, b) => {
-          // Priorité à la section avec le plus grand ratio d'intersection
-          if (Math.abs(a.ratio - b.ratio) > 0.1) {
-            return b.ratio - a.ratio;
-          }
-          // Si ratios similaires, prendre celle qui est le plus en haut
-          return a.top - b.top;
-        });
-        
-        setActiveSection(visibleSections[0].id);
+      // Seulement changer si on a une section clairement visible
+      if (mostVisible && maxRatio > 0.3) {
+        isUpdating = true;
+        setActiveSection(mostVisible);
+        setTimeout(() => {
+          isUpdating = false;
+        }, 100);
       }
     };
 
@@ -66,15 +45,29 @@ const App = () => {
     const sections = document.querySelectorAll('section[id]');
     sections.forEach((section) => observer.observe(section));
 
-    // Ajouter aussi un listener de scroll pour une détection plus précise
+    // Listener de scroll pour les cas limites
     const handleScroll = () => {
-      updateActiveSection();
+      if (isUpdating) return;
+      
+      const scrollY = window.scrollY;
+      
+      // Force accueil si tout en haut
+      if (scrollY < 50) {
+        setActiveSection('accueil');
+        return;
+      }
+      
+      // Force infos si tout en bas
+      if (window.innerHeight + scrollY >= document.body.offsetHeight - 100) {
+        setActiveSection('infos');
+        return;
+      }
     };
     
     window.addEventListener('scroll', handleScroll);
     
-    // Initialiser la section active au chargement
-    updateActiveSection();
+    // Initialiser à l'accueil
+    setActiveSection('accueil');
 
     return () => {
       observer.disconnect();
