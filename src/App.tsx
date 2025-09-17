@@ -5,15 +5,18 @@ import './App.css';
 
 const App = () => {
   const [showWebsite, setShowWebsite] = useState(false);
+  const [isGothamActive, setIsGothamActive] = useState(true);
 
   // Écouter les messages de la scène Gotham
   useEffect(() => {
     const handleGothamComplete = () => {
       setShowWebsite(true);
+      setIsGothamActive(false);
     };
 
     const handleGothamReturn = () => {
       setShowWebsite(false);
+      setIsGothamActive(true);
     };
 
     // Écouter les événements personnalisés
@@ -30,7 +33,7 @@ const App = () => {
     <div className="app">
       {/* Scène Gotham - toujours présente mais cachée quand le site est affiché */}
       <div className={`gotham-container ${showWebsite ? 'hidden' : ''}`}>
-        <GothamScene />
+        <GothamScene isActive={isGothamActive} />
       </div>
 
       {/* Site web du restaurant - affiché seulement après l'animation */}

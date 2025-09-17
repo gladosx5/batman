@@ -22,6 +22,7 @@
 .gotham-container.hidden {
   opacity: 0;
   pointer-events: none;
+  z-index: -1;
 }
 
 .website-container {
@@ -30,6 +31,7 @@
   min-height: 100vh;
   z-index: 100;
   background: var(--bg);
+  overflow-y: auto;
 }
 
 /* Gotham Scene Styles */

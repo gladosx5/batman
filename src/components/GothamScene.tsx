@@ -2,7 +2,11 @@ import React from 'react';
 import BatmanLogo from './BatmanLogo';
 import ScrollIndicator from './ScrollIndicator';
 
-const GothamScene = () => {
+interface GothamSceneProps {
+  isActive: boolean;
+}
+
+const GothamScene: React.FC<GothamSceneProps> = ({ isActive }) => {
   return (
     <div className="gotham-scene" tabIndex={0} id="gotham-scene">
       {/* Sky with stars */}
@@ -14,7 +18,7 @@ const GothamScene = () => {
       <div className="skyline"></div>
 
       {/* Batman Logo */}
-      <BatmanLogo />
+      <BatmanLogo isActive={isActive} />
 
       {/* Scroll Indicator */}
       <ScrollIndicator />

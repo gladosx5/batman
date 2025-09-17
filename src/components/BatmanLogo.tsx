@@ -1,7 +1,11 @@
 import React, { useRef, useEffect } from 'react';
 import { gsap } from 'gsap';
 
-const BatmanLogo = () => {
+interface BatmanLogoProps {
+  isActive: boolean;
+}
+
+const BatmanLogo: React.FC<BatmanLogoProps> = ({ isActive }) => {
   const logoRef = useRef<HTMLImageElement>(null);
 
   useEffect(() => {
@@ -102,8 +106,8 @@ const BatmanLogo = () => {
 
     // Gestion du scroll - SEULEMENT pour l'animation Gotham
     const handleWheel = (e: WheelEvent) => {
-      // Ne pas intercepter le scroll si l'animation est terminée
-      if (isAnimationComplete && !isInReverseMode) {
+      // Ne pas intercepter le scroll si l'animation n'est pas active ou si elle est terminée
+      if (!isActive || (isAnimationComplete && !isInReverseMode)) {
         return;
       }
 
@@ -137,12 +141,12 @@ const BatmanLogo = () => {
     // Gestion du scroll tactile
     let touchStartY = 0;
     const handleTouchStart = (e: TouchEvent) => {
-      if (isAnimationComplete && !isInReverseMode) return;
+      if (!isActive || (isAnimationComplete && !isInReverseMode)) return;
       touchStartY = e.touches[0].clientY;
     };
 
     const handleTouchMove = (e: TouchEvent) => {
-      if (isAnimationComplete && !isInReverseMode) return;
+      if (!isActive || (isAnimationComplete && !isInReverseMode)) return;
       
       e.preventDefault();
       
@@ -174,7 +178,7 @@ const BatmanLogo = () => {
 
     // Gestion des touches clavier
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (isAnimationComplete && !isInReverseMode) return;
+      if (!isActive || (isAnimationComplete && !isInReverseMode)) return;
       
       let deltaY = 0;
       switch(e.key) {
@@ -267,7 +271,7 @@ const BatmanLogo = () => {
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('gotham-animation-return', handleReturnToGotham);
     };
-  }, []);
+  }, [isActive]);
 
   return (
     <div className="batman-logo-container">
